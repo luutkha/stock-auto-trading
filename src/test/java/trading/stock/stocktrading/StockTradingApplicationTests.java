@@ -8,6 +8,7 @@ class StockTradingApplicationTests {
 
     @Test
     void contextLoads() {
+        System.out.println("Loading context successfully!");
     }
 
 }

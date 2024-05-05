@@ -21,8 +21,8 @@ public class StockControllerTests {
     public void testControllerEndpoint() {
         StockDetailResponseDTO response = restTemplate.getForObject("http://localhost:" + port + "/stock?symbol=HPG", StockDetailResponseDTO.class);
 
-        Assertions.assertTrue(response.getStatus().equals("ok"));
-        Assertions.assertTrue(response.getInfoByTimes().size() > 0);
+        Assertions.assertEquals("ok", response.getStatus());
+        Assertions.assertFalse(response.getInfoByTimes().isEmpty());
 
     }
 }

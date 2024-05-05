@@ -19,7 +19,8 @@ public class StockServiceTest {
     public void StockService_getStockDetailByCodeInCurrentTime() {
         String hpg = stockService.getStockDetailByCodeInCurrentTime("HPG").block();
         System.out.println(hpg);
+        assert hpg != null;
         Assertions.assertNotEquals(hpg.length(), 0);
-        Assertions.assertTrue(hpg.length() > 0);
+        Assertions.assertFalse(hpg.isEmpty());
     }
 }
