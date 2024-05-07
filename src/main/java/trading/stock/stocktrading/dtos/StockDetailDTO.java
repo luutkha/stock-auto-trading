@@ -14,19 +14,33 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StockDetailDTO {
-    /** time in timestamp **/
+    /**
+     * time in timestamp
+     **/
     private List<Long> t;
-    /** price  ATC **/
+    /**
+     * price  ATC
+     **/
     private List<Double> c;
-    /** price  ATO **/
+    /**
+     * price  ATO
+     **/
     private List<Double> o;
-    /** high price  **/
+    /**
+     * high price
+     **/
     private List<Double> h;
-    /** low price  **/
+    /**
+     * low price
+     **/
     private List<Double> l;
-    /** volume of stock **/
+    /**
+     * volume of stock
+     **/
     private List<Long> v;
-    /** status  **/
+    /**
+     * status
+     **/
     private String s;
 
     public static StockDetailDTO fromJson(String json) throws IOException {

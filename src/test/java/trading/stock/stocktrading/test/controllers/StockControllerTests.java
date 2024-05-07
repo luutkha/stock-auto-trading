@@ -1,29 +1,55 @@
 package trading.stock.stocktrading.test.controllers;
 
-import org.junit.jupiter.api.Assertions;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import reactor.core.publisher.Mono;
+import trading.stock.stocktrading.controllers.StockController;
+import trading.stock.stocktrading.dtos.StockDetailDTO;
 import trading.stock.stocktrading.dtos.StockDetailResponseDTO;
+import trading.stock.stocktrading.services.StockService;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+
+@SpringBootTest
+//@AutoConfigureMockMvc
+@Log4j2
 public class StockControllerTests {
 
-    @LocalServerPort
-    private int port;
-
-    @Autowired
-    private TestRestTemplate restTemplate;
+    @MockBean
+    private StockService stockServiceMock;
 
     @Test
-    public void testControllerEndpoint() {
-        StockDetailResponseDTO response = restTemplate.getForObject("http://localhost:" + port + "/stock?symbol=HPG", StockDetailResponseDTO.class);
+    void testGetStockDetailByCodeAndTime() throws IOException {
+        // Arrange
+        String symbol = "HPG";
+        long from = 1714635915L;
+        long to = 1714895215L;
 
-        Assertions.assertEquals("ok", response.getStatus());
-        Assertions.assertFalse(response.getInfoByTimes().isEmpty());
+        String jsonDetail = "{\"t\":[1714608000, 1714694400],\"c\":[28.35, 28.65],\"o\":[28.4, 28.35],\"h\":[28.4, 29.1],\"l\":[28.05, 28.35],\"v\":[7322100, 16714800],\"s\":\"ok\"}";
+        Mockito.when(stockServiceMock.getStockDetailByCodeAndTime(symbol, from, to)).thenReturn(Mono.just(jsonDetail));
 
+        StockDetailDTO stockDetailDTO = StockDetailDTO.fromJson(jsonDetail);
+        StockDetailResponseDTO expectedResponse = StockDetailResponseDTO.fromStockDetailDTO(stockDetailDTO);
+
+        StockController stockController = new StockController(stockServiceMock);
+
+        // Act
+
+        ResponseEntity<StockDetailResponseDTO> responseEntity = stockController.getStockDetailByCodeInCurrentTime(symbol, from, to);
+        StockDetailResponseDTO actualResponse = responseEntity.getBody();
+
+        // Assert
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(expectedResponse, actualResponse);
     }
+
 }
 

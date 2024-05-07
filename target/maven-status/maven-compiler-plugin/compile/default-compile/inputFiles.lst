@@ -1,6 +1,8 @@
 D:\Personal\teaching\code\stock-trading\src\main\java\trading\stock\stocktrading\configs\WebClientConfig.java
 D:\Personal\teaching\code\stock-trading\src\main\java\trading\stock\stocktrading\services\StockService.java
+D:\Personal\teaching\code\stock-trading\src\main\java\trading\stock\stocktrading\dtos\StockInfoDTO.java
 D:\Personal\teaching\code\stock-trading\src\main\java\trading\stock\stocktrading\controllers\StockController.java
 D:\Personal\teaching\code\stock-trading\src\main\java\trading\stock\stocktrading\StockTradingApplication.java
 D:\Personal\teaching\code\stock-trading\src\main\java\trading\stock\stocktrading\dtos\StockDetailDTO.java
+D:\Personal\teaching\code\stock-trading\src\main\java\trading\stock\stocktrading\dtos\StockDetailResponseDTO.java
 D:\Personal\teaching\code\stock-trading\src\main\java\trading\stock\stocktrading\services\impl\StockServiceImpl.java
