@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @SpringBootTest
-//@AutoConfigureMockMvc
 @Log4j2
 public class StockControllerTests {
 

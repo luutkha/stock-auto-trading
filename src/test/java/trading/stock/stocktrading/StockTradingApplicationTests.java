@@ -9,6 +9,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class StockTradingApplicationTests {
+
     @LocalServerPort
     private int port;
 
