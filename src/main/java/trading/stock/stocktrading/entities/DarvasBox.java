@@ -18,14 +18,13 @@ public class DarvasBox {
      **/
     public static List<DarvasBox> analysisDarvasBoxByPrices(List<Double> prices) {
         List<DarvasBox> darvasBoxes = new ArrayList<>();
-        double[] arrayOfPrices = prices.stream().mapToDouble(Double::doubleValue).toArray();
-//        double maxPrice = Stock.statisticsPrice(arrayOfPrices).getMax();
-//        double minPrice = Stock.statisticsPrice(arrayOfPrices).getMin();
+//        double[] arrayOfPrices = prices.stream().mapToDouble(Double::doubleValue).toArray();
+
         if (!prices.isEmpty()) {
             double lowPrice = prices.get(0);
             double highPrice = prices.get(0);
             for (Double price : prices) {
-                // if current- price lower than  min-price, create a new box
+
                 int TOLERANCE = 2;
                 if (price < lowPrice) {
                     if (price < lowPrice - TOLERANCE) {

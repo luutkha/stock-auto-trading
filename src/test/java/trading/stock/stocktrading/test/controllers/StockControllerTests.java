@@ -11,6 +11,7 @@ import reactor.core.publisher.Mono;
 import trading.stock.stocktrading.controllers.StockController;
 import trading.stock.stocktrading.dtos.StockDetailDTO;
 import trading.stock.stocktrading.dtos.StockDetailResponseDTO;
+import trading.stock.stocktrading.facades.StockFacade;
 import trading.stock.stocktrading.services.StockService;
 
 import java.io.IOException;
@@ -24,6 +25,8 @@ public class StockControllerTests {
 
     @MockBean
     private StockService stockServiceMock;
+    @MockBean
+    private StockFacade stockFacade;
 
     @Test
     void testGetStockDetailByCodeAndTime() throws IOException {
@@ -38,11 +41,11 @@ public class StockControllerTests {
         StockDetailDTO stockDetailDTO = StockDetailDTO.fromJson(jsonDetail);
         StockDetailResponseDTO expectedResponse = StockDetailResponseDTO.fromStockDetailDTO(stockDetailDTO);
 
-        StockController stockController = new StockController(stockServiceMock);
+        StockController stockController = new StockController(stockFacade,stockServiceMock);
 
         // Act
 
-        ResponseEntity<StockDetailResponseDTO> responseEntity = stockController.getStockDetailByCodeInCurrentTime(symbol, from, to);
+        ResponseEntity<StockDetailResponseDTO> responseEntity = stockController.getStockDetailByCodeAndTime(symbol, from, to);
         StockDetailResponseDTO actualResponse = responseEntity.getBody();
 
         // Assert

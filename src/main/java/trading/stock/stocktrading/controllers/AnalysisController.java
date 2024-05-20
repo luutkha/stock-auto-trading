@@ -1,8 +1,9 @@
 package trading.stock.stocktrading.controllers;
 
 import lombok.extern.log4j.Log4j2;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,30 +21,29 @@ import java.util.Objects;
 @RequestMapping("/analysis")
 @Log4j2
 public class AnalysisController {
-
     private final StockController stockController;
 
     public AnalysisController(StockController stockController) {
         this.stockController = stockController;
     }
 
-    @GetMapping
-    public ResponseEntity<List<DarvasBox>> findDarvasBoxOfStock(@RequestParam String symbol, @RequestParam Long from, @RequestParam Long to) throws IOException {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-
-        ResponseEntity<StockDetailResponseDTO> response = stockController.getStockDetailByCodeInCurrentTime(symbol, from, to);
-
-        stopWatch.stop();
-        log.info("[PROCESSED TIME] = " + stopWatch.getTotalTimeSeconds());
+    @GetMapping("/darvas")
+    public ResponseEntity<List<DarvasBox>> detectDarvasBoxOfStock(@RequestParam String symbol, @RequestParam Long from, @RequestParam Long to) throws IOException {
+        ResponseEntity<StockDetailResponseDTO> response = stockController.getStockDetailByCodeAndTime(symbol, from, to);
         List<Double> doubles = new ArrayList<>();
-
         List<StockInfoDTO> infoByTimes = response.getBody().getInfoByTimes();
         if (!Objects.deepEquals(infoByTimes, null)) {
             infoByTimes.forEach(e -> doubles.add(e.getPrice()));
         }
         List<DarvasBox> body = DarvasBox.analysisDarvasBoxByPrices(doubles);
         return ResponseEntity.ok(body);
-
     }
+
+    @GetMapping
+    public String analysisStock(@RequestParam String symbol, @RequestParam Long from, @RequestParam Long to, @RequestParam(required = false) Boolean darvas, @RequestParam(required = false) Boolean volume ){
+
+        return "";
+    }
+
+
 }

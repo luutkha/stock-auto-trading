@@ -17,14 +17,18 @@ public class StockDetailResponseDTO {
 
     private String status;
     private List<StockInfoDTO> infoByTimes;
+    private List<Double> prices;
 
     public static StockDetailResponseDTO fromStockDetailDTO(StockDetailDTO stockDetailDTO) {
         List<StockInfoDTO> infoByTimes = new ArrayList<>();
+        List<Double> prices = new ArrayList<>();
         for (int i = 0; i < stockDetailDTO.getT().size(); i++) {
-            StockInfoDTO stockInfo = StockInfoDTO.builder().price(stockDetailDTO.getC().get(i)).time(stockDetailDTO.getT().get(i)).volume(stockDetailDTO.getV().get(i)).build();
+            Double price = stockDetailDTO.getC().get(i);
+            StockInfoDTO stockInfo = StockInfoDTO.builder().price(price).time(stockDetailDTO.getT().get(i)).volume(stockDetailDTO.getV().get(i)).build();
             infoByTimes.add(stockInfo);
+            prices.add(price);
         }
-        return new StockDetailResponseDTO(stockDetailDTO.getS(), infoByTimes);
+        return new StockDetailResponseDTO(stockDetailDTO.getS(), infoByTimes, prices);
 
     }
 

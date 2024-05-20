@@ -24,3 +24,10 @@ hs_err_pid*
 replay_pid*
 .idea/vcs.xml
 qodana.yaml
+/target/
+/tmp/
+/target/
+*.lst
+*.lst
+/appmap.yml
+/.idea/
