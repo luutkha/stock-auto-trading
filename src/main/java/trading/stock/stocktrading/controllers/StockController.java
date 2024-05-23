@@ -1,13 +1,13 @@
 package trading.stock.stocktrading.controllers;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
-import trading.stock.stocktrading.dtos.StockDetailDTO;
 import trading.stock.stocktrading.dtos.responses.StockDetailResponseDTO;
 import trading.stock.stocktrading.facades.StockFacade;
 import trading.stock.stocktrading.services.StockService;
@@ -36,21 +36,12 @@ public class StockController {
     }
 
 
+    // TODO: Spring security block async controller, for now, we enable async controller for any request
     @GetMapping("/async")
-    public Mono<ResponseEntity<StockDetailResponseDTO>> getStockDetailByCodeAndTimeAsync(@RequestParam String symbol, @RequestParam(required = false) Long from, @RequestParam(required = false) Long to) throws IOException {
-
-
-        Mono<String> detailMono;
-        detailMono = stockService.getStockDetailByCodeAndTime(symbol, from, to);
-
-        return detailMono.map(detail -> {
-            try {
-                StockDetailDTO stockDetail = StockDetailDTO.fromJson(detail);
-                StockDetailResponseDTO response = StockDetailResponseDTO.fromStockDetailDTO(stockDetail);
-                return ResponseEntity.ok(response);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+    public Mono<ResponseEntity<StockDetailResponseDTO>> getStockDetailByCodeAndTimeAsync(@RequestParam String symbol, @RequestParam(required = false) Long from, @RequestParam(required = false) Long to) throws Exception {
+        return stockFacade.getStockDetailByTimeAsync(symbol, from, to).map(ResponseEntity::ok).onErrorResume(e -> {
+            log.error("Error fetching stock details", e);
+            return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
         });
     }
 

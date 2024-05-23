@@ -1,12 +1,12 @@
 package trading.stock.stocktrading.dtos;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.IOException;
 import java.util.List;
 
 @Getter
@@ -43,9 +43,14 @@ public class StockDetailDTO {
      **/
     private String s;
 
-    public static StockDetailDTO fromJson(String json) throws IOException {
+    public static StockDetailDTO fromJson(String json) {
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(json, StockDetailDTO.class);
+        try {
+            return objectMapper.readValue(json, StockDetailDTO.class);
+        } catch (JsonProcessingException e) {
+            System.out.println("Exception catch!");
+            throw new RuntimeException(e);
+        }
     }
 
 }
