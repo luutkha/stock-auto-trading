@@ -38,7 +38,7 @@ public class Stock {
     public static DefaultMovingAverageDTO calculateDefaultMovingAverage(List<Double> prices) {
         DefaultMovingAverageDTO defaultMovingAverageDTO = new DefaultMovingAverageDTO();
         int[] maSize = {20, 50, 200};
-        double[] values = {0,0,0};
+        double[] values = {0, 0, 0};
         int index = -1;
         for (int size : maSize) {
             index++;

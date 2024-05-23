@@ -1,21 +1,18 @@
 package trading.stock.stocktrading.controllers;
 
 import lombok.extern.log4j.Log4j2;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import trading.stock.stocktrading.dtos.DefaultMovingAverageDTO;
+import trading.stock.stocktrading.dtos.StockInfoDTO;
 import trading.stock.stocktrading.dtos.responses.AnalysisStockDetailDTO;
 import trading.stock.stocktrading.dtos.responses.StockDetailResponseDTO;
-import trading.stock.stocktrading.dtos.StockInfoDTO;
 import trading.stock.stocktrading.entities.DarvasBox;
 import trading.stock.stocktrading.entities.Stock;
 import trading.stock.stocktrading.facades.StockFacade;
-import trading.stock.stocktrading.utils.Number;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,13 +31,6 @@ public class AnalysisController {
         this.stockFacade = stockFacade;
     }
 
-    @GetMapping("/darvas")
-    public ResponseEntity<List<DarvasBox>> detectDarvasBoxOfStock(@RequestParam String symbol, @RequestParam Long from, @RequestParam Long to) throws IOException {
-        StockDetailResponseDTO response = stockFacade.getStockDetailByTime(symbol, from, to);
-        List<DarvasBox> body = DarvasBox.analysisDarvasBoxByPrices(response.getPrices());
-        return ResponseEntity.ok(body);
-    }
-
     private static List<DarvasBox> analysisDarvasBox(StockDetailResponseDTO response) {
         List<Double> doubles = new ArrayList<>();
         List<StockInfoDTO> infoByTimes = response.getInfoByTimes();
@@ -50,11 +40,19 @@ public class AnalysisController {
         return DarvasBox.analysisDarvasBoxByPrices(doubles);
     }
 
+    @GetMapping("/darvas")
+    public ResponseEntity<List<DarvasBox>> detectDarvasBoxOfStock(@RequestParam String symbol, @RequestParam Long from, @RequestParam Long to) throws IOException {
+        StockDetailResponseDTO response = stockFacade.getStockDetailByTime(symbol, from, to);
+        List<DarvasBox> body = DarvasBox.analysisDarvasBoxByPrices(response.getPrices());
+        return ResponseEntity.ok(body);
+    }
+
     @GetMapping
-    public AnalysisStockDetailDTO analysisStock(@RequestParam String symbol, @RequestParam Long from, @RequestParam Long to, @RequestParam(required = false) Boolean darvas, @RequestParam(required = false) Boolean volume ) throws IOException {
+    public AnalysisStockDetailDTO analysisStock(@RequestParam String symbol, @RequestParam Long from, @RequestParam Long to, @RequestParam(required = false) Boolean darvas, @RequestParam(required = false) Boolean volume) throws IOException {
         StockDetailResponseDTO stockDetailByTime = stockFacade.getStockDetailByTime(symbol, from, to);
-        List<DarvasBox> darvasBoxes = DarvasBox.analysisDarvasBoxByPrices(stockDetailByTime.getPrices());;
+        List<DarvasBox> darvasBoxes = DarvasBox.analysisDarvasBoxByPrices(stockDetailByTime.getPrices());
+        ;
         DefaultMovingAverageDTO defaultMovingAverage = Stock.calculateDefaultMovingAverage(stockDetailByTime.getPrices());
-        return new AnalysisStockDetailDTO(darvasBoxes,defaultMovingAverage,stockDetailByTime);
+        return new AnalysisStockDetailDTO(darvasBoxes, defaultMovingAverage, stockDetailByTime);
     }
 }

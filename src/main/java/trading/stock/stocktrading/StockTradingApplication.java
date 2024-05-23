@@ -13,6 +13,7 @@ public class StockTradingApplication extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(StockTradingApplication.class, args);
     }
+
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(StockTradingApplication.class);

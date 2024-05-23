@@ -3,7 +3,6 @@ package trading.stock.stocktrading.dtos;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Getter
 @Setter

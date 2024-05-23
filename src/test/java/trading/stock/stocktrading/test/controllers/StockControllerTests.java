@@ -41,7 +41,7 @@ public class StockControllerTests {
         StockDetailDTO stockDetailDTO = StockDetailDTO.fromJson(jsonDetail);
         StockDetailResponseDTO expectedResponse = StockDetailResponseDTO.fromStockDetailDTO(stockDetailDTO);
 
-        StockController stockController = new StockController(stockFacade,stockServiceMock);
+        StockController stockController = new StockController(stockFacade, stockServiceMock);
 
         // Act
 

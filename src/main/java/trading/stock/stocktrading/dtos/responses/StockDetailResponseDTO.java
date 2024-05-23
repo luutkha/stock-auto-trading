@@ -31,7 +31,7 @@ public class StockDetailResponseDTO {
             Double price = stockDetailDTO.getC().get(i);
 
             Long time = stockDetailDTO.getT().get(i);
-            LocalDate date = Instant.ofEpochMilli(time*1000).atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate date = Instant.ofEpochMilli(time * 1000).atZone(ZoneId.systemDefault()).toLocalDate();
             StockInfoDTO stockInfo = StockInfoDTO.builder()
                     .price(price)
                     .time(time)
