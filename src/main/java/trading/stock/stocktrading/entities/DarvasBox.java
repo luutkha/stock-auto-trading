@@ -40,28 +40,28 @@ public class DarvasBox {
         } while (statisticsOf10FirstPrices.getMax() - statisticsOf10FirstPrices.getMin() <= GAP_OF_PRICE);
 
         DarvasBox baseOfDarvasBox = new DarvasBox(statisticsOf10FirstPrices.getMin(), statisticsOf10FirstPrices.getMax(), GAP_OF_TIME - 1);
+        Result initialBase = new Result(GAP_OF_TIME, baseOfDarvasBox);
 
-        if (baseOfDarvasBox.getHighPrice() > 0) {
-            darvasBoxes.add(baseOfDarvasBox);
+        if (initialBase.baseOfDarvasBox().getHighPrice() > 0) {
+            darvasBoxes.add(initialBase.baseOfDarvasBox());
         }
 
         do {
             if (!prices.isEmpty()) {
-                double lowReferencePrice = baseOfDarvasBox.getLowPrice();
-                double highReferencePrice = baseOfDarvasBox.getHighPrice();
+                double lowReferencePrice = initialBase.baseOfDarvasBox().getLowPrice();
+                double highReferencePrice = initialBase.baseOfDarvasBox().getHighPrice();
 
                 int count = 0;
-                for (int i = GAP_OF_TIME - 1; i < prices.size(); i++) {
+                for (int i = initialBase.GAP_OF_TIME() - 1; i < prices.size(); i++) {
                     Double price = prices.get(i);
                     GAP_OF_PRICE = price / 100 * 2;
                     if (price <= highReferencePrice && price >= lowReferencePrice) {
-                        log.info(" [in darvas box] [price] = {}", price);
                         count++;
                     } else {
                         count++;
                         if (price > (highReferencePrice + GAP_OF_PRICE)) {
-                            log.info("/ price / lowRef / highRef / =  {} / {} / {}", price, lowReferencePrice, highReferencePrice);
                             if ((count > 10 || i == prices.size() - 1)) {
+                                log.info("/ price / lowRef / highRef / =  {} / {} / {}", price, lowReferencePrice, highReferencePrice);
                                 darvasBoxes.add(new DarvasBox(highReferencePrice, price, count));
 
                                 lowReferencePrice = highReferencePrice;
@@ -72,9 +72,9 @@ public class DarvasBox {
                         }
 
                         if (price < (lowReferencePrice - GAP_OF_PRICE)) {
-                            log.info("/ price / lowRef / highRef / =  {} / {} / {}", price, lowReferencePrice, highReferencePrice);
 
                             if ((count > 10 || i == prices.size() - 1)) {
+                                log.info("/ price / lowRef / highRef / =  {} / {} / {}", price, lowReferencePrice, highReferencePrice);
                                 darvasBoxes.add(new DarvasBox(price, lowReferencePrice, count));
                                 highReferencePrice = lowReferencePrice;
                                 lowReferencePrice = price;
@@ -91,6 +91,9 @@ public class DarvasBox {
 
         return darvasBoxes;
 
+    }
+
+    private record Result(int GAP_OF_TIME, DarvasBox baseOfDarvasBox) {
     }
 
 }
