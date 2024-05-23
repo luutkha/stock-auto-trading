@@ -1,10 +1,15 @@
-package trading.stock.stocktrading.dtos;
+package trading.stock.stocktrading.dtos.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import trading.stock.stocktrading.dtos.StockDetailDTO;
+import trading.stock.stocktrading.dtos.StockInfoDTO;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -24,7 +29,15 @@ public class StockDetailResponseDTO {
         List<Double> prices = new ArrayList<>();
         for (int i = 0; i < stockDetailDTO.getT().size(); i++) {
             Double price = stockDetailDTO.getC().get(i);
-            StockInfoDTO stockInfo = StockInfoDTO.builder().price(price).time(stockDetailDTO.getT().get(i)).volume(stockDetailDTO.getV().get(i)).build();
+
+            Long time = stockDetailDTO.getT().get(i);
+            LocalDate date = Instant.ofEpochMilli(time*1000).atZone(ZoneId.systemDefault()).toLocalDate();
+            StockInfoDTO stockInfo = StockInfoDTO.builder()
+                    .price(price)
+                    .time(time)
+                    .volume(stockDetailDTO.getV().get(i))
+                    .date(date)
+                    .build();
             infoByTimes.add(stockInfo);
             prices.add(price);
         }

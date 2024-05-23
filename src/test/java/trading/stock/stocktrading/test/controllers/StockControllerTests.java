@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 import trading.stock.stocktrading.controllers.StockController;
 import trading.stock.stocktrading.dtos.StockDetailDTO;
-import trading.stock.stocktrading.dtos.StockDetailResponseDTO;
+import trading.stock.stocktrading.dtos.responses.StockDetailResponseDTO;
 import trading.stock.stocktrading.facades.StockFacade;
 import trading.stock.stocktrading.services.StockService;
 

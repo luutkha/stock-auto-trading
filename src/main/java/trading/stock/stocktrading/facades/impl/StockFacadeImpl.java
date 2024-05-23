@@ -2,7 +2,7 @@ package trading.stock.stocktrading.facades.impl;
 
 import org.springframework.stereotype.Component;
 import trading.stock.stocktrading.dtos.StockDetailDTO;
-import trading.stock.stocktrading.dtos.StockDetailResponseDTO;
+import trading.stock.stocktrading.dtos.responses.StockDetailResponseDTO;
 import trading.stock.stocktrading.facades.StockFacade;
 import trading.stock.stocktrading.services.StockService;
 

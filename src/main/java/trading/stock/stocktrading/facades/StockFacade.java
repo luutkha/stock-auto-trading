@@ -1,6 +1,6 @@
 package trading.stock.stocktrading.facades;
 
-import trading.stock.stocktrading.dtos.StockDetailResponseDTO;
+import trading.stock.stocktrading.dtos.responses.StockDetailResponseDTO;
 
 import java.io.IOException;
 

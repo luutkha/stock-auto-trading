@@ -1,4 +1,4 @@
-package trading.stock.stocktrading.dtos;
+package trading.stock.stocktrading.dtos.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

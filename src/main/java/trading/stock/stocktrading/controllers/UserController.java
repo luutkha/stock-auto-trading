@@ -8,8 +8,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
-import trading.stock.stocktrading.dtos.LoginRequest;
-import trading.stock.stocktrading.dtos.ValidateTokenResponse;
+import trading.stock.stocktrading.dtos.requests.LoginRequest;
+import trading.stock.stocktrading.dtos.responses.ValidateTokenResponse;
 import trading.stock.stocktrading.utils.JwtUtils;
 
 @RestController
