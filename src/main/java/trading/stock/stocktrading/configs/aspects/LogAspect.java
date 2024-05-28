@@ -20,44 +20,30 @@ public class LogAspect {
     @Autowired
     HttpServletRequest request;
 
+
     @Pointcut("within(trading.stock.stocktrading.controllers.*)")
     public void pointCutCrossController() {
     }
-
 
     @Before("pointCutCrossController()")
     public void startMethod(JoinPoint joinPoint) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Logger logger = LogManager.getLogger(signature.getDeclaringTypeName());
         String methodName = signature.getMethod().getName();
-        ThreadContext.put("userId", request.getHeader("USER_ID"));
-        ThreadContext.put("ipAddress", request.getRemoteAddr());
-        ThreadContext.put("session", request.getSession().getId());
-        logger.info("ipAddress  {}", ThreadContext.get("ipAddress"));
-        logger.info("userId  {}", ThreadContext.get("userId"));
-        logger.info("session  {}", ThreadContext.get("session"));
+        logHeaderConfig(logger);
         logger.info("START EXE METHOD: {}", methodName);
-        ThreadContext.remove("userId");
-        ThreadContext.remove("ipAddress");
-        ThreadContext.remove("session");
+        removeHeaderConfigOfThreadContext();
     }
 
     @After("pointCutCrossController()")
     public void endMethod(JoinPoint joinPoint) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         String methodName = signature.getMethod().getName();
-        ThreadContext.put("userId", request.getHeader("USER_ID"));
-        ThreadContext.put("ipAddress", request.getRemoteAddr());
-        ThreadContext.put("session", request.getSession().getId());
-        log.info("ipAddress  {}", ThreadContext.get("ipAddress"));
-        log.info("userId  {}", ThreadContext.get("userId"));
-        log.info("session  {}", ThreadContext.get("session"));
+        logHeaderConfig(log);
 
         log.info("END EXE METHOD: {}", methodName);
 
-        ThreadContext.remove("userId");
-        ThreadContext.remove("ipAddress");
-        ThreadContext.remove("session");
+        removeHeaderConfigOfThreadContext();
     }
 
     @AfterThrowing(value = "pointCutCrossController()", throwing = "ex")
@@ -66,18 +52,11 @@ public class LogAspect {
         Logger logger = LogManager.getLogger(signature.getDeclaringTypeName());
         String methodName = signature.getMethod().getName();
 
-        ThreadContext.put("userId", request.getHeader("USER_ID"));
-        ThreadContext.put("ipAddress", request.getRemoteAddr());
-        ThreadContext.put("session", request.getSession().getId());
-        logger.info("ipAddress  {}", ThreadContext.get("ipAddress"));
-        logger.info("userId  {}", ThreadContext.get("userId"));
-        logger.info("session  {}", ThreadContext.get("session"));
+        logHeaderConfig(logger);
 
         logger.info("Exception: {} {}", methodName, ex);
 
-        ThreadContext.remove("userId");
-        ThreadContext.remove("ipAddress");
-        ThreadContext.remove("session");
+        removeHeaderConfigOfThreadContext();
     }
 
     @Around(value = "pointCutCrossController()")
@@ -92,5 +71,20 @@ public class LogAspect {
         log.info("{} executed in {} ms", joinPoint.getSignature().getName(), executionTime);
 
         return proceed;
+    }
+
+    private void logHeaderConfig(Logger logger) {
+        ThreadContext.put("userId", request.getHeader("USER_ID"));
+        ThreadContext.put("ipAddress", request.getRemoteAddr());
+        ThreadContext.put("session", request.getSession().getId());
+        logger.info("ipAddress  {}", ThreadContext.get("ipAddress"));
+        logger.info("userId  {}", ThreadContext.get("userId"));
+        logger.info("session  {}", ThreadContext.get("session"));
+    }
+
+    private static void removeHeaderConfigOfThreadContext() {
+        ThreadContext.remove("userId");
+        ThreadContext.remove("ipAddress");
+        ThreadContext.remove("session");
     }
 }
