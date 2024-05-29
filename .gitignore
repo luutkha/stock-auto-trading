@@ -31,3 +31,4 @@ qodana.yaml
 *.lst
 /appmap.yml
 /.idea/
+.idea/misc.xml
