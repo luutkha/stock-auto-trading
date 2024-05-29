@@ -51,8 +51,16 @@ public class AnalysisController {
     public AnalysisStockDetailDTO analysisStock(@RequestParam String symbol, @RequestParam Long from, @RequestParam Long to, @RequestParam(required = false) Boolean darvas, @RequestParam(required = false) Boolean volume) throws IOException {
         StockDetailResponseDTO stockDetailByTime = stockFacade.getStockDetailByTime(symbol, from, to);
         List<DarvasBox> darvasBoxes = DarvasBox.analysisDarvasBoxByPrices(stockDetailByTime.getPrices());
-        ;
         DefaultMovingAverageDTO defaultMovingAverage = Stock.calculateDefaultMovingAverage(stockDetailByTime.getPrices());
-        return new AnalysisStockDetailDTO(darvasBoxes, defaultMovingAverage, stockDetailByTime);
+        DefaultMovingAverageDTO volumes = Stock.calculateDefaultVolume(stockDetailByTime.getPrices());
+        AnalysisStockDetailDTO analysisStockDetailDTO = AnalysisStockDetailDTO.builder()
+                .darvasBoxes(darvasBoxes)
+                .volumeAnalysis(volumes)
+                .movingAverages(defaultMovingAverage)
+                .stock(stockDetailByTime)
+                .build();
+
+        return analysisStockDetailDTO;
     }
+
 }

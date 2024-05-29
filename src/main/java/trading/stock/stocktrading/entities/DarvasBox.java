@@ -29,6 +29,7 @@ public class DarvasBox {
         int GAP_OF_TIME = 10;
         double[] prices_array;
         DoubleSummaryStatistics statisticsOf10FirstPrices;
+        if (prices.size() < GAP_OF_TIME) return darvasBoxes;
         do {
             prices_array = Number.convertListToArray(prices.subList(0, GAP_OF_TIME));
             statisticsOf10FirstPrices = Stock.statisticsPrice(prices_array);
