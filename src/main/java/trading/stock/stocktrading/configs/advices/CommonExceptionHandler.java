@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import trading.stock.stocktrading.dtos.responses.ValidateTokenResponse;
+import java.io.IOException;
 
 @ControllerAdvice
 @Log4j2
@@ -46,6 +47,20 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleLoginFail(RuntimeException ex, WebRequest request) {
         log.info("[ADVICE] LOGIN FAIL");
         String bodyOfResponse = "Username/Password wrong";
+        return new ResponseEntity<>(bodyOfResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(value = {IOException.class})
+    protected ResponseEntity<Object> handleIOeException(RuntimeException ex, WebRequest request) {
+        log.info("[ADVICE] IOException");
+        String bodyOfResponse = "IOException caught";
+        return new ResponseEntity<>(bodyOfResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(value = {Exception.class})
+    protected ResponseEntity<Object> handleException(Exception ex) {
+        log.info("[ADVICE] Exception");
+        String bodyOfResponse = "Exception caught " + ex.getMessage();
         return new ResponseEntity<>(bodyOfResponse, HttpStatus.UNAUTHORIZED);
     }
 
