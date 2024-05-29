@@ -20,12 +20,19 @@ public class LogAspect {
     @Autowired
     HttpServletRequest request;
 
-
     @Pointcut("within(trading.stock.stocktrading.controllers.*)")
     public void pointCutCrossController() {
     }
 
-    @Before("pointCutCrossController()")
+    @Pointcut("within(trading.stock.stocktrading.facades.*)")
+    public void pointCutCrossFacade() {
+    }
+
+    @Pointcut("within(trading.stock.stocktrading.services.*)")
+    public void pointCutCrossService() {
+    }
+    
+    @Before("pointCutCrossController() || pointCutCrossService() || pointCutCrossFacade()")
     public void startMethod(JoinPoint joinPoint) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Logger logger = LogManager.getLogger(signature.getDeclaringTypeName());
@@ -35,7 +42,7 @@ public class LogAspect {
         removeHeaderConfigOfThreadContext();
     }
 
-    @After("pointCutCrossController()")
+    @After("pointCutCrossController() || pointCutCrossService() || pointCutCrossFacade()")
     public void endMethod(JoinPoint joinPoint) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         String methodName = signature.getMethod().getName();
@@ -87,4 +94,9 @@ public class LogAspect {
         ThreadContext.remove("ipAddress");
         ThreadContext.remove("session");
     }
+
+//    @Before("execution(* trading.stock.stocktrading.services.StockService.getStockDetailByCodeAndTime(String, Long, Long))")
+//    public void logBefore() {
+//        log.error("Executing log Before advice on getStockDetailByCodeAndTime()");
+//    }
 }
