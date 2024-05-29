@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import trading.stock.stocktrading.dtos.responses.ValidateTokenResponse;
+
 import java.io.IOException;
 
 @ControllerAdvice
@@ -54,14 +55,14 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleIOeException(RuntimeException ex, WebRequest request) {
         log.info("[ADVICE] IOException");
         String bodyOfResponse = "IOException caught";
-        return new ResponseEntity<>(bodyOfResponse, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(bodyOfResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(value = {Exception.class})
     protected ResponseEntity<Object> handleException(Exception ex) {
         log.info("[ADVICE] Exception");
         String bodyOfResponse = "Exception caught " + ex.getMessage();
-        return new ResponseEntity<>(bodyOfResponse, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(bodyOfResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

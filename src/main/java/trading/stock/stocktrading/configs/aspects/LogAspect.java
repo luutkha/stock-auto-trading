@@ -20,6 +20,12 @@ public class LogAspect {
     @Autowired
     HttpServletRequest request;
 
+    private static void removeHeaderConfigOfThreadContext() {
+        ThreadContext.remove("userId");
+        ThreadContext.remove("ipAddress");
+        ThreadContext.remove("session");
+    }
+
     @Pointcut("within(trading.stock.stocktrading.controllers.*)")
     public void pointCutCrossController() {
     }
@@ -31,7 +37,7 @@ public class LogAspect {
     @Pointcut("within(trading.stock.stocktrading.services.*)")
     public void pointCutCrossService() {
     }
-    
+
     @Before("pointCutCrossController() || pointCutCrossService() || pointCutCrossFacade()")
     public void startMethod(JoinPoint joinPoint) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -87,12 +93,6 @@ public class LogAspect {
         logger.info("ipAddress  {}", ThreadContext.get("ipAddress"));
         logger.info("userId  {}", ThreadContext.get("userId"));
         logger.info("session  {}", ThreadContext.get("session"));
-    }
-
-    private static void removeHeaderConfigOfThreadContext() {
-        ThreadContext.remove("userId");
-        ThreadContext.remove("ipAddress");
-        ThreadContext.remove("session");
     }
 
 //    @Before("execution(* trading.stock.stocktrading.services.StockService.getStockDetailByCodeAndTime(String, Long, Long))")

@@ -7,21 +7,25 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import trading.stock.stocktrading.dtos.requests.LoginRequest;
+import trading.stock.stocktrading.dtos.requests.RegisterRequestDTO;
 import trading.stock.stocktrading.dtos.responses.ValidateTokenResponse;
+import trading.stock.stocktrading.models.User;
+import trading.stock.stocktrading.services.UserService;
 import trading.stock.stocktrading.utils.JwtUtils;
 
 @RestController
 @RequestMapping("/auth")
 public class UserController {
-    // Các thành viên Autowired khác có thể được thêm vào tại đây
-//    @Autowired
-//    UserRepository userRepository;
 
     @Autowired
+    UserService userService;
+    @Autowired
+    PasswordEncoder passwordEncoder;
+    @Autowired
     private AuthenticationManager authenticationManager;
-
     @Autowired
     private JwtUtils jwtUtils;
 
@@ -36,6 +40,12 @@ public class UserController {
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
         );
         return jwtUtils.generateToken(loginRequest.getEmail());
+    }
+
+    @PostMapping("/register")
+    public User register(@RequestBody RegisterRequestDTO body) throws AuthenticationException {
+
+        return userService.save(new User(null, body.getEmail(), body.getUserName(), passwordEncoder.encode(body.getPassword())));
     }
 
     @GetMapping("validate")
