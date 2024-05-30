@@ -87,11 +87,11 @@ public class LogAspect {
     }
 
     private void logHeaderConfig(Logger logger) {
-        ThreadContext.put("userId", request.getHeader("USER_ID"));
-        ThreadContext.put("ipAddress", request.getRemoteAddr());
+//        ThreadContext.put("userId", request.getHeader("USER_ID"));
+//        ThreadContext.put("ipAddress", request.getRemoteAddr());
         ThreadContext.put("session", request.getSession().getId());
-        logger.info("ipAddress  {}", ThreadContext.get("ipAddress"));
-        logger.info("userId  {}", ThreadContext.get("userId"));
+//        logger.info("ipAddress  {}", ThreadContext.get("ipAddress"));
+//        logger.info("userId  {}", ThreadContext.get("userId"));
         logger.info("session  {}", ThreadContext.get("session"));
     }
 

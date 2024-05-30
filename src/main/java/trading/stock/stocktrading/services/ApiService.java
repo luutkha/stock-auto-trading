@@ -3,15 +3,12 @@ package trading.stock.stocktrading.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
+import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 public class ApiService {
@@ -22,11 +19,20 @@ public class ApiService {
     @Autowired
     StockService stockService;
 
-    public List<CompletableFuture<String>> fetchDataAsync() {
-        List<String> listStock = new ArrayList<>(Arrays.asList("MWG", "HPG", "SSI", "LPB", "AAA", "AAH", "AAS", "AAT", "HAH", "ZZZ", "VNG", "MSN", "VHC", "GVR", "VND", "VIX"));
-        return IntStream.range(0, listStock.size() - 1).mapToObj(i -> {
-            Mono<String> mono = stockService.getStockDetailByCodeInCurrentTime(listStock.get(i));
-            return CompletableFuture.supplyAsync(mono::block, executorService);
-        }).collect(Collectors.toList());
+    @Autowired
+    WebClient.Builder webClientBuilder;
+
+    public <T> List<CompletableFuture<T>> getDataFromURLs(List<String> urls, Class<T> responseType) {
+        return urls.stream()
+                .map(url -> webClientBuilder
+                        .build()
+                        .get()
+                        .uri(url)
+                        .retrieve()
+                        .bodyToMono(responseType)
+                        .toFuture())
+                .map(future -> CompletableFuture.supplyAsync(future::join, executorService))
+                .collect(Collectors.toList());
     }
+
 }

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import trading.stock.stocktrading.constants.VnDirectConstants;
 import trading.stock.stocktrading.dtos.DefaultMovingAverageDTO;
 import trading.stock.stocktrading.dtos.StockInfoDTO;
 import trading.stock.stocktrading.dtos.responses.AnalysisStockDetailDTO;
@@ -17,9 +18,11 @@ import trading.stock.stocktrading.services.ApiService;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/analysis")
@@ -62,7 +65,11 @@ public class AnalysisController {
 
     @GetMapping("/test")
     public List<StockDetailResponseDTO> testGetMany() {
-        List<CompletableFuture<String>> futures = apiService.fetchDataAsync();
+        long currentTime = System.currentTimeMillis() / 1000L;
+        int MILI_OF_2_DAYS = 60 * 60 * 24 * 2;
+        List<String> listStock = new ArrayList<>(Arrays.asList("MWG", "HPG", "SSI", "LPB", "AAA", "AAH", "AAS", "AAT", "HAH", "ZZZ", "VNG", "MSN", "VHC", "GVR", "VND", "VIX"));
+        listStock = listStock.stream().map(code -> String.format(VnDirectConstants.STOCK_DETAIL_URL, code, currentTime - MILI_OF_2_DAYS, currentTime + 100)).collect(Collectors.toList());
+        List<CompletableFuture<String>> futures = apiService.getDataFromURLs(listStock, String.class);
         List<StockDetailResponseDTO> results = new ArrayList<>();
         futures
                 .forEach(stringCompletableFuture -> {
