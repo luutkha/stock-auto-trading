@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class ValidateTokenResponse {
+public class ValidateTokenResponseDTO {
     private boolean isValid;
     private String message;
 }

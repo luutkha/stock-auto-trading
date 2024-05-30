@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 import trading.stock.stocktrading.dtos.responses.StockDetailResponseDTO;
 import trading.stock.stocktrading.facades.StockFacade;
-import trading.stock.stocktrading.services.StockService;
 
 import java.io.IOException;
 
@@ -20,11 +19,9 @@ import java.io.IOException;
 public class StockController {
 
     private final StockFacade stockFacade;
-    private final StockService stockService;
 
-    public StockController(StockFacade stockFacade, StockService stockService) {
+    public StockController(StockFacade stockFacade) {
         this.stockFacade = stockFacade;
-        this.stockService = stockService;
     }
 
     @GetMapping()

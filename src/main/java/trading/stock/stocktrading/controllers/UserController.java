@@ -9,9 +9,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import trading.stock.stocktrading.dtos.requests.LoginRequest;
+import trading.stock.stocktrading.dtos.requests.LoginRequestDTO;
 import trading.stock.stocktrading.dtos.requests.RegisterRequestDTO;
-import trading.stock.stocktrading.dtos.responses.ValidateTokenResponse;
+import trading.stock.stocktrading.dtos.responses.ValidateTokenResponseDTO;
 import trading.stock.stocktrading.models.User;
 import trading.stock.stocktrading.services.UserService;
 import trading.stock.stocktrading.utils.JwtUtils;
@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest loginRequest) throws AuthenticationException {
+    public String login(@RequestBody LoginRequestDTO loginRequest) throws AuthenticationException {
         Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
         );
@@ -51,7 +51,7 @@ public class UserController {
     @GetMapping("validate")
     public ResponseEntity<Object> validateToken(@RequestParam("token") String token) {
         jwtUtils.extractUsername(token);
-        ValidateTokenResponse bodyOfResponse = ValidateTokenResponse.builder().isValid(true).build();
+        ValidateTokenResponseDTO bodyOfResponse = ValidateTokenResponseDTO.builder().isValid(true).build();
         return ResponseEntity.ok(bodyOfResponse);
     }
 

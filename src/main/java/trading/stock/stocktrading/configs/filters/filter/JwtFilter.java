@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import trading.stock.stocktrading.services.CustomUserDetailsService;
+import trading.stock.stocktrading.services.impl.UserDetailsServiceImpl;
 import trading.stock.stocktrading.utils.JwtUtils;
 
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtils jwtUtil;
     @Autowired
-    private CustomUserDetailsService service;
+    private UserDetailsServiceImpl service;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, JwtException {

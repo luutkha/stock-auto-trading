@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import trading.stock.stocktrading.dtos.responses.ValidateTokenResponse;
+import trading.stock.stocktrading.dtos.responses.ValidateTokenResponseDTO;
 
 import java.io.IOException;
 
@@ -35,11 +35,11 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {SignatureException.class, ExpiredJwtException.class, SignatureException.class, JwtException.class,})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    protected ResponseEntity<ValidateTokenResponse> handleExpiredToken(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<ValidateTokenResponseDTO> handleExpiredToken(RuntimeException ex, WebRequest request) {
         log.error("[ADVICE] TOKEN EXCEPTION ");
         String errorMessage;
         errorMessage = generateErrorMessage(ex);
-        ValidateTokenResponse bodyOfResponse = ValidateTokenResponse.builder().isValid(false).message(errorMessage).build();
+        ValidateTokenResponseDTO bodyOfResponse = ValidateTokenResponseDTO.builder().isValid(false).message(errorMessage).build();
         return new ResponseEntity<>(bodyOfResponse, HttpStatus.UNAUTHORIZED);
 
     }

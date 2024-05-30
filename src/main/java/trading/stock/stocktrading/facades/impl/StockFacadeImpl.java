@@ -10,6 +10,7 @@ import trading.stock.stocktrading.services.StockService;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 @Log4j2
@@ -34,15 +35,31 @@ public class StockFacadeImpl implements StockFacade {
 
     @Override
     public Mono<StockDetailResponseDTO> getStockDetailByTimeAsync(String symbol, Long from, Long to) {
-        return stockService.getStockDetailByCodeAndTime(symbol, from, to)
-                .map(detail -> {
-                    StockDetailDTO stockDetail = StockDetailDTO.fromJson(detail);
-                    return StockDetailResponseDTO.fromStockDetailDTO(stockDetail);
-                })
-                .onErrorResume(e -> {
-                    log.error("[IOException] {}", e.getMessage());
-                    return Mono.error(new RuntimeException(e));
-                });
+        return stockService.getStockDetailByCodeAndTime(symbol, from, to).map(detail -> {
+            StockDetailDTO stockDetail = StockDetailDTO.fromJson(detail);
+            return StockDetailResponseDTO.fromStockDetailDTO(stockDetail);
+        }).onErrorResume(e -> {
+            log.error("[IOException] {}", e.getMessage());
+            return Mono.error(new RuntimeException(e));
+        });
+    }
+
+    @Override
+    public StockDetailResponseDTO convertRawStringToStockDetailDTO(String rawString) {
+        StockDetailDTO stockDetail = StockDetailDTO.fromJson(rawString);
+        return StockDetailResponseDTO.fromStockDetailDTO(stockDetail);
+    }
+
+    @Override
+    public StockDetailResponseDTO convertRawStringToStockDetailDTO(CompletableFuture<String> futureString) {
+        String string = futureString.join();
+        log.info(string);
+        if (string != null && !string.isEmpty()) {
+
+            StockDetailDTO stockDetail = StockDetailDTO.fromJson(string);
+            return StockDetailResponseDTO.fromStockDetailDTO(stockDetail);
+        }
+        return null;
     }
 
 }
