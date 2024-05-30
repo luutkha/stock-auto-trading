@@ -13,22 +13,24 @@ import trading.stock.stocktrading.dtos.responses.StockDetailResponseDTO;
 import trading.stock.stocktrading.entities.DarvasBox;
 import trading.stock.stocktrading.entities.Stock;
 import trading.stock.stocktrading.facades.StockFacade;
+import trading.stock.stocktrading.services.ApiService;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/analysis")
 @Log4j2
 public class AnalysisController {
-    private final StockController stockController;
     private final StockFacade stockFacade;
+    private final ApiService apiService;
 
-    public AnalysisController(StockController stockController, StockFacade stockFacade) {
-        this.stockController = stockController;
+    public AnalysisController(StockFacade stockFacade, ApiService apiService) {
         this.stockFacade = stockFacade;
+        this.apiService = apiService;
     }
 
     private static List<DarvasBox> analysisDarvasBox(StockDetailResponseDTO response) {
@@ -53,14 +55,23 @@ public class AnalysisController {
         List<DarvasBox> darvasBoxes = DarvasBox.analysisDarvasBoxByPrices(stockDetailByTime.getPrices());
         DefaultMovingAverageDTO defaultMovingAverage = Stock.calculateDefaultMovingAverage(stockDetailByTime.getPrices());
         DefaultMovingAverageDTO volumes = Stock.calculateDefaultVolume(stockDetailByTime.getPrices());
-        AnalysisStockDetailDTO analysisStockDetailDTO = AnalysisStockDetailDTO.builder()
-                .darvasBoxes(darvasBoxes)
-                .volumeAnalysis(volumes)
-                .movingAverages(defaultMovingAverage)
-                .stock(stockDetailByTime)
-                .build();
+        AnalysisStockDetailDTO analysisStockDetailDTO = AnalysisStockDetailDTO.builder().darvasBoxes(darvasBoxes).volumeAnalysis(volumes).movingAverages(defaultMovingAverage).stock(stockDetailByTime).build();
 
         return analysisStockDetailDTO;
+    }
+
+    @GetMapping("/test")
+    public List<StockDetailResponseDTO> testGetMany() {
+        List<CompletableFuture<String>> futures = apiService.fetchDataAsync();
+        List<StockDetailResponseDTO> results = new ArrayList<>();
+        futures
+                .forEach(stringCompletableFuture -> {
+                    StockDetailResponseDTO stockDetail = stockFacade.convertRawStringToStockDetailDTO(stringCompletableFuture);
+                    if (stockDetail != null) {
+                        results.add(stockDetail);
+                    }
+                });
+        return results;
     }
 
 }
