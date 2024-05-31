@@ -5,7 +5,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import trading.stock.stocktrading.constants.VnDirectConstants;
+import trading.stock.stocktrading.dtos.requests.FilterStockRequestDTO;
+import trading.stock.stocktrading.dtos.CompanyReportDTO;
+import trading.stock.stocktrading.dtos.responses.FilterStockRawResponseDTO;
 import trading.stock.stocktrading.services.StockService;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @Log4j2
@@ -38,6 +44,19 @@ public class StockServiceImpl implements StockService {
 
         Mono<String> result = webClientBuilder.build().get().uri(url).retrieve().bodyToMono(String.class);
         return result;
+    }
+
+    @Override
+    public CompletableFuture<FilterStockRawResponseDTO> filterStock(FilterStockRequestDTO req) {
+        CompletableFuture<FilterStockRawResponseDTO> future = webClientBuilder
+                .build()
+                .post()
+                .uri(VnDirectConstants.STOCK_SEARCH_URL)
+                .body(Mono.just(req), FilterStockRequestDTO.class)
+                .retrieve()
+                .bodyToMono(FilterStockRawResponseDTO.class)
+                .toFuture();
+        return future;
     }
 
 
