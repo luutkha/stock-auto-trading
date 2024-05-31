@@ -3,12 +3,17 @@ package trading.stock.stocktrading.facades.impl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+import trading.stock.stocktrading.dtos.DefaultMovingAverageDTO;
 import trading.stock.stocktrading.dtos.StockDetailDTO;
+import trading.stock.stocktrading.dtos.responses.AnalysisStockDetailDTO;
 import trading.stock.stocktrading.dtos.responses.StockDetailResponseDTO;
+import trading.stock.stocktrading.entities.DarvasBox;
+import trading.stock.stocktrading.entities.Stock;
 import trading.stock.stocktrading.facades.StockFacade;
 import trading.stock.stocktrading.services.StockService;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
@@ -60,6 +65,21 @@ public class StockFacadeImpl implements StockFacade {
             return StockDetailResponseDTO.fromStockDetailDTO(stockDetail);
         }
         return null;
+    }
+
+    @Override
+    public AnalysisStockDetailDTO analysisStock(StockDetailResponseDTO stockDetail) {
+        List<DarvasBox> darvasBoxes = DarvasBox.analysisDarvasBoxByPrices(stockDetail.getPrices());
+        DefaultMovingAverageDTO defaultMovingAverage = Stock.calculateDefaultMovingAverage(stockDetail.getPrices());
+        DefaultMovingAverageDTO volumes = Stock.calculateDefaultVolume(stockDetail.getPrices());
+        AnalysisStockDetailDTO analysisStockDetailDTO = AnalysisStockDetailDTO.builder()
+                .darvasBoxes(darvasBoxes)
+                .volumeAnalysis(volumes)
+                .movingAverages(defaultMovingAverage)
+                .stock(stockDetail)
+                .build();
+
+        return analysisStockDetailDTO;
     }
 
 }

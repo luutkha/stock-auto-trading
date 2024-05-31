@@ -59,7 +59,7 @@ public class LogAspect {
         removeHeaderConfigOfThreadContext();
     }
 
-    @AfterThrowing(value = "pointCutCrossController()", throwing = "ex")
+    @AfterThrowing(value = "pointCutCrossController() || pointCutCrossService() || pointCutCrossFacade()", throwing = "ex")
     public void throwException(JoinPoint joinPoint, Throwable ex) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Logger logger = LogManager.getLogger(signature.getDeclaringTypeName());

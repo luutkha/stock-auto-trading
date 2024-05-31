@@ -1,6 +1,7 @@
 package trading.stock.stocktrading.facades;
 
 import reactor.core.publisher.Mono;
+import trading.stock.stocktrading.dtos.responses.AnalysisStockDetailDTO;
 import trading.stock.stocktrading.dtos.responses.StockDetailResponseDTO;
 
 import java.io.IOException;
@@ -14,4 +15,5 @@ public interface StockFacade {
     StockDetailResponseDTO convertRawStringToStockDetailDTO(String rawString);
 
     StockDetailResponseDTO convertRawStringToStockDetailDTO(CompletableFuture<String> futureString);
+    AnalysisStockDetailDTO analysisStock(StockDetailResponseDTO stockDetail);
 }
