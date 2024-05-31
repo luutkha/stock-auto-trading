@@ -6,11 +6,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import trading.stock.stocktrading.constants.VnDirectConstants;
 import trading.stock.stocktrading.dtos.requests.FilterStockRequestDTO;
-import trading.stock.stocktrading.dtos.CompanyReportDTO;
 import trading.stock.stocktrading.dtos.responses.FilterStockRawResponseDTO;
 import trading.stock.stocktrading.services.StockService;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -32,9 +30,7 @@ public class StockServiceImpl implements StockService {
         String url = String.format(VnDirectConstants.STOCK_DETAIL_URL, stockCode, currentTime - MILI_OF_2_DAYS, currentTime + 100);
         log.info("[URI] = " + url);
 
-        Mono<String> result = webClientBuilder.build().get().uri(url).retrieve().bodyToMono(String.class);
-
-        return result;
+        return webClientBuilder.build().get().uri(url).retrieve().bodyToMono(String.class);
     }
 
     @Override
@@ -42,21 +38,26 @@ public class StockServiceImpl implements StockService {
         String url = String.format(VnDirectConstants.STOCK_DETAIL_URL, stockCode, from, to);
         log.info("[URI] = " + url);
 
-        Mono<String> result = webClientBuilder.build().get().uri(url).retrieve().bodyToMono(String.class);
-        return result;
+        return webClientBuilder.build().get().uri(url).retrieve().bodyToMono(String.class);
     }
 
     @Override
     public CompletableFuture<FilterStockRawResponseDTO> filterStock(FilterStockRequestDTO req) {
-        CompletableFuture<FilterStockRawResponseDTO> future = webClientBuilder
+
+
+        return webClientBuilder
                 .build()
                 .post()
                 .uri(VnDirectConstants.STOCK_SEARCH_URL)
-                .body(Mono.just(req), FilterStockRequestDTO.class)
+                .bodyValue(req)
                 .retrieve()
                 .bodyToMono(FilterStockRawResponseDTO.class)
+                .doOnSuccess(response -> log.info("[Received response] size = {}", response.getData().size()))
+                .onErrorResume((e) -> {
+                    log.error("Error occurred while filtering stock", e);
+                    return Mono.empty();
+                })
                 .toFuture();
-        return future;
     }
 
 

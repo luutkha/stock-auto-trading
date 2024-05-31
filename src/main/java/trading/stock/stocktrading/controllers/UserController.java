@@ -1,11 +1,10 @@
 package trading.stock.stocktrading.controllers;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -18,25 +17,22 @@ import trading.stock.stocktrading.utils.JwtUtils;
 
 @RestController
 @RequestMapping("/auth")
+@AllArgsConstructor
 public class UserController {
 
-    @Autowired
-    UserService userService;
-    @Autowired
-    PasswordEncoder passwordEncoder;
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private JwtUtils jwtUtils;
+    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
 
     @GetMapping("/")
     public ResponseEntity<String> hello() {
-        return ResponseEntity.ok("Helllllllllllo");
+        return ResponseEntity.ok("Hello!");
     }
 
     @PostMapping("/login")
     public String login(@RequestBody LoginRequestDTO loginRequest) throws AuthenticationException {
-        Authentication authenticate = authenticationManager.authenticate(
+        authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
         );
         return jwtUtils.generateToken(loginRequest.getEmail());
@@ -55,10 +51,5 @@ public class UserController {
         return ResponseEntity.ok(bodyOfResponse);
     }
 
-//    @GetMapping("/user/{email}")
-//    public ResponseEntity<User> getUserById(@PathVariable("email") String email) {
-//        System.out.println("CATCH");
-//        return ResponseEntity.ok(userRepository.findByEmail(email));
-//    }
 
 }

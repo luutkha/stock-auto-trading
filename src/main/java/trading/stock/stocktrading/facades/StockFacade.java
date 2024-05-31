@@ -15,5 +15,6 @@ public interface StockFacade {
     StockDetailResponseDTO convertRawStringToStockDetailDTO(String rawString);
 
     StockDetailResponseDTO convertRawStringToStockDetailDTO(CompletableFuture<String> futureString);
+
     AnalysisStockDetailDTO analysisStock(StockDetailResponseDTO stockDetail);
 }

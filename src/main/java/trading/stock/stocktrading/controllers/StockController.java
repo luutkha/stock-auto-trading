@@ -3,15 +3,17 @@ package trading.stock.stocktrading.controllers;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+import trading.stock.stocktrading.dtos.requests.FilterStockRequestDTO;
+import trading.stock.stocktrading.dtos.responses.FilterStockRawResponseDTO;
 import trading.stock.stocktrading.dtos.responses.StockDetailResponseDTO;
 import trading.stock.stocktrading.facades.StockFacade;
+import trading.stock.stocktrading.services.StockService;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/stock")
@@ -19,9 +21,11 @@ import java.io.IOException;
 public class StockController {
 
     private final StockFacade stockFacade;
+    private final StockService stockService;
 
-    public StockController(StockFacade stockFacade) {
+    public StockController(StockFacade stockFacade, StockService stockService) {
         this.stockFacade = stockFacade;
+        this.stockService = stockService;
     }
 
     @GetMapping()
@@ -40,6 +44,14 @@ public class StockController {
             log.error("Error fetching stock details", e);
             return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
         });
+    }
+
+    @PostMapping("/filter")
+    public FilterStockRawResponseDTO filterStock() {
+        FilterStockRequestDTO.Filter filter = new FilterStockRequestDTO.Filter("floor", "EQUAL", "HNX,HOSE,UPCOM");
+        FilterStockRequestDTO requestDTO = new FilterStockRequestDTO("code,companyNameVi,floor,priceCr,quarterReportDate,annualReportDate,industrylv2,marketCapCr", List.of(filter), "code:asc");
+        CompletableFuture<FilterStockRawResponseDTO> responseMono = stockService.filterStock(requestDTO);
+        return responseMono.join();
     }
 
 

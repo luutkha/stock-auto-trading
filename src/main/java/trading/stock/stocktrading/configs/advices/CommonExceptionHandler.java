@@ -36,7 +36,8 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {SignatureException.class, ExpiredJwtException.class, SignatureException.class, JwtException.class,})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected ResponseEntity<ValidateTokenResponseDTO> handleExpiredToken(RuntimeException ex, WebRequest request) {
-        log.error("[ADVICE] TOKEN EXCEPTION ");
+        log.error("[ADVICE] TOKEN EXCEPTION {} ", ex.getMessage());
+        log.error("[Session] {} ", request.getSessionId());
         String errorMessage;
         errorMessage = generateErrorMessage(ex);
         ValidateTokenResponseDTO bodyOfResponse = ValidateTokenResponseDTO.builder().isValid(false).message(errorMessage).build();
@@ -46,14 +47,16 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {AuthenticationException.class})
     protected ResponseEntity<Object> handleLoginFail(RuntimeException ex, WebRequest request) {
-        log.info("[ADVICE] LOGIN FAIL");
+        log.info("[ADVICE] LOGIN FAIL {}", ex.getMessage());
+        log.error("[Session] {} ", request.getSessionId());
         String bodyOfResponse = "Username/Password wrong";
         return new ResponseEntity<>(bodyOfResponse, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(value = {IOException.class})
     protected ResponseEntity<Object> handleIOeException(RuntimeException ex, WebRequest request) {
-        log.info("[ADVICE] IOException");
+        log.info("[ADVICE] IOException {}", ex.getMessage());
+        log.error("[Session] {} ", request.getSessionId());
         String bodyOfResponse = "IOException caught";
         return new ResponseEntity<>(bodyOfResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }

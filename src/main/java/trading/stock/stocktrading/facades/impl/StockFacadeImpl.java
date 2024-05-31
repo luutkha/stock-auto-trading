@@ -12,7 +12,6 @@ import trading.stock.stocktrading.entities.Stock;
 import trading.stock.stocktrading.facades.StockFacade;
 import trading.stock.stocktrading.services.StockService;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -26,7 +25,7 @@ public class StockFacadeImpl implements StockFacade {
         this.stockService = stockService;
     }
 
-    public StockDetailResponseDTO getStockDetailByTime(String symbol, Long from, Long to) throws IOException {
+    public StockDetailResponseDTO getStockDetailByTime(String symbol, Long from, Long to) {
         String stockDetailByCode;
         if (Objects.deepEquals(null, from) || Objects.deepEquals(null, to)) {
             stockDetailByCode = stockService.getStockDetailByCodeInCurrentTime(symbol).block();
@@ -72,14 +71,13 @@ public class StockFacadeImpl implements StockFacade {
         List<DarvasBox> darvasBoxes = DarvasBox.analysisDarvasBoxByPrices(stockDetail.getPrices());
         DefaultMovingAverageDTO defaultMovingAverage = Stock.calculateDefaultMovingAverage(stockDetail.getPrices());
         DefaultMovingAverageDTO volumes = Stock.calculateDefaultVolume(stockDetail.getPrices());
-        AnalysisStockDetailDTO analysisStockDetailDTO = AnalysisStockDetailDTO.builder()
+
+        return AnalysisStockDetailDTO.builder()
                 .darvasBoxes(darvasBoxes)
                 .volumeAnalysis(volumes)
                 .movingAverages(defaultMovingAverage)
                 .stock(stockDetail)
                 .build();
-
-        return analysisStockDetailDTO;
     }
 
 }

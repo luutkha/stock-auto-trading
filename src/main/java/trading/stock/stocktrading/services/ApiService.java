@@ -1,10 +1,9 @@
 package trading.stock.stocktrading.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -12,16 +11,12 @@ import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class ApiService {
 
     @Qualifier("applicationTaskExecutor")
-    @Autowired
-    Executor executorService;
-    @Autowired
-    StockService stockService;
-
-    @Autowired
-    WebClient.Builder webClientBuilder;
+    private final Executor executorService;
+    private final WebClient.Builder webClientBuilder;
 
     public <T> List<CompletableFuture<T>> getDataFromURLs(List<String> urls, Class<T> responseType) {
         return urls.stream()
@@ -42,7 +37,7 @@ public class ApiService {
                         .build()
                         .post()
                         .uri(url)
-                        .body(Mono.just(body), Object.class)
+                        .bodyValue(body)
                         .retrieve()
                         .bodyToMono(responseType)
                         .toFuture())

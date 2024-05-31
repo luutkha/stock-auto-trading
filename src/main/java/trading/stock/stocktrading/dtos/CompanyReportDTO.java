@@ -15,4 +15,5 @@ public class CompanyReportDTO {
     private String floor;
     private String annualReportDate;
     private String id;
+
 }

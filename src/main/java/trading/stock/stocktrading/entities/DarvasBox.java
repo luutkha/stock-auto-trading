@@ -56,10 +56,8 @@ public class DarvasBox {
                 for (int i = initialBase.GAP_OF_TIME() - 1; i < prices.size(); i++) {
                     Double price = prices.get(i);
                     GAP_OF_PRICE = price / 100 * 2;
-                    if (price <= highReferencePrice && price >= lowReferencePrice) {
-                        count++;
-                    } else {
-                        count++;
+                    count++;
+                    if (!(price <= highReferencePrice) || !(price >= lowReferencePrice)) {
                         if (price > (highReferencePrice + GAP_OF_PRICE)) {
                             if ((count > 10 || i == prices.size() - 1)) {
                                 log.info("/ price / lowRef / highRef / =  {} / {} / {}", price, lowReferencePrice, highReferencePrice);

@@ -36,25 +36,14 @@ public class Stock {
     }
 
     public static DefaultMovingAverageDTO calculateDefaultMovingAverage(List<Double> prices) {
-        DefaultMovingAverageDTO defaultMovingAverageDTO = new DefaultMovingAverageDTO();
-        int[] maSize = {20, 50, 200};
-        double[] values = {0, 0, 0};
-        int index = -1;
-        for (int size : maSize) {
-            index++;
-            if (prices.size() >= size) {
-                List<Double> movingAverage = prices.subList(prices.size() - size, prices.size() - 1);
-                double maValue = Arrays.stream(Number.convertListToArray(movingAverage)).summaryStatistics().getAverage();
-                values[index] = maValue;
-            }
-            defaultMovingAverageDTO.setDefaultConfig(maSize);
-            defaultMovingAverageDTO.setValues(values);
-        }
-
-        return defaultMovingAverageDTO;
+        return getMovingAverageDTO(prices);
     }
 
     public static DefaultMovingAverageDTO calculateDefaultVolume(List<Double> volumes) {
+        return getMovingAverageDTO(volumes);
+    }
+
+    private static DefaultMovingAverageDTO getMovingAverageDTO(List<Double> volumes) {
         DefaultMovingAverageDTO defaultMovingAverageDTO = new DefaultMovingAverageDTO();
         int[] maSize = {20, 50, 200};
         double[] values = {0, 0, 0};

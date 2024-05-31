@@ -1,7 +1,7 @@
 package trading.stock.stocktrading.services.impl;
 
 import com.mongodb.DuplicateKeyException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import trading.stock.stocktrading.models.User;
 import trading.stock.stocktrading.repositories.UserRepository;
@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<User> findAll() {

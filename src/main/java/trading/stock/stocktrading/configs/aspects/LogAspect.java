@@ -1,6 +1,7 @@
 package trading.stock.stocktrading.configs.aspects;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,16 +10,15 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
 @Log4j2
+@AllArgsConstructor
 public class LogAspect {
 
-    @Autowired
-    HttpServletRequest request;
+    private final HttpServletRequest request;
 
     private static void removeHeaderConfigOfThreadContext() {
         ThreadContext.remove("userId");
@@ -34,7 +34,7 @@ public class LogAspect {
     public void pointCutCrossFacade() {
     }
 
-    @Pointcut("within(trading.stock.stocktrading.services.*)")
+    @Pointcut("within(trading.stock.stocktrading.services.impl.*)")
     public void pointCutCrossService() {
     }
 
@@ -72,7 +72,7 @@ public class LogAspect {
         removeHeaderConfigOfThreadContext();
     }
 
-    @Around(value = "pointCutCrossController()")
+    @Around(value = "pointCutCrossController() || pointCutCrossService() || pointCutCrossFacade()")
     public Object measureExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
 
