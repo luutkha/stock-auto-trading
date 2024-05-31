@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -28,6 +29,20 @@ public class ApiService {
                         .build()
                         .get()
                         .uri(url)
+                        .retrieve()
+                        .bodyToMono(responseType)
+                        .toFuture())
+                .map(future -> CompletableFuture.supplyAsync(future::join, executorService))
+                .collect(Collectors.toList());
+    }
+
+    public <T> List<CompletableFuture<T>> getDataFromURLsPostMethod(List<String> urls, Class<T> responseType, Object body) {
+        return urls.stream()
+                .map(url -> webClientBuilder
+                        .build()
+                        .post()
+                        .uri(url)
+                        .body(Mono.just(body), Object.class)
                         .retrieve()
                         .bodyToMono(responseType)
                         .toFuture())
