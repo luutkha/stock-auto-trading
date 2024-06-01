@@ -8,12 +8,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import trading.stock.stocktrading.constants.SecurityConstants;
 import trading.stock.stocktrading.dtos.requests.LoginRequestDTO;
 import trading.stock.stocktrading.dtos.requests.RegisterRequestDTO;
 import trading.stock.stocktrading.dtos.responses.ValidateTokenResponseDTO;
 import trading.stock.stocktrading.models.User;
 import trading.stock.stocktrading.services.UserService;
 import trading.stock.stocktrading.utils.JwtUtils;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
@@ -40,8 +44,10 @@ public class UserController {
 
     @PostMapping("/register")
     public User register(@RequestBody RegisterRequestDTO body) throws AuthenticationException {
+        List<String> roles = body.getRoles();
+        roles = roles.stream().map(role -> SecurityConstants.ROLE_PREFIX + role).collect(Collectors.toList());
 
-        return userService.save(new User(null, body.getEmail(), body.getUserName(), passwordEncoder.encode(body.getPassword())));
+        return userService.save(new User(null, body.getEmail(), body.getUserName(), passwordEncoder.encode(body.getPassword()), roles));
     }
 
     @GetMapping("validate")

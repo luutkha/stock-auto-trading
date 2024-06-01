@@ -5,8 +5,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-//@Table(name = "user_master")
-//@Entity
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,6 +20,5 @@ public class User {
     private String email;
     private String userName;
     private String password;
-
-
+    private List<String> roles;
 }

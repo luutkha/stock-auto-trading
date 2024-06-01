@@ -95,8 +95,8 @@ public class LogAspect {
         logger.info("session  {}", ThreadContext.get("session"));
     }
 
-//    @Before("execution(* trading.stock.stocktrading.services.StockService.getStockDetailByCodeAndTime(String, Long, Long))")
-//    public void logBefore() {
-//        log.error("Executing log Before advice on getStockDetailByCodeAndTime()");
-//    }
+    @Before("execution(* trading.stock.stocktrading.services.StockService.getStockDetailByCodeAndTime(String, Long, Long))")
+    public void logBefore() {
+        log.error("Executing log Before advice on getStockDetailByCodeAndTime()");
+    }
 }
