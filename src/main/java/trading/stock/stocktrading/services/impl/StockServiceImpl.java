@@ -7,17 +7,21 @@ import reactor.core.publisher.Mono;
 import trading.stock.stocktrading.constants.VnDirectConstants;
 import trading.stock.stocktrading.dtos.requests.FilterStockRequestDTO;
 import trading.stock.stocktrading.dtos.responses.FilterStockRawResponseDTO;
+import trading.stock.stocktrading.repositories.redis.FilterStockRawResponseRepository;
 import trading.stock.stocktrading.services.StockService;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.Optional;
 
 @Service
 @Log4j2
 public class StockServiceImpl implements StockService {
     private final WebClient.Builder webClientBuilder;
+    private final FilterStockRawResponseRepository filterStockRawResponseRepository;
 
-    public StockServiceImpl(WebClient.Builder webClientBuilder) {
+
+    public StockServiceImpl(WebClient.Builder webClientBuilder, FilterStockRawResponseRepository filterStockRawResponseRepository) {
         this.webClientBuilder = webClientBuilder;
+        this.filterStockRawResponseRepository = filterStockRawResponseRepository;
     }
 
 
@@ -42,22 +46,34 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public CompletableFuture<FilterStockRawResponseDTO> filterStock(FilterStockRequestDTO req) {
+    public FilterStockRawResponseDTO filterStock(FilterStockRequestDTO req) {
+        String redisId = req.toString();
+        FilterStockRawResponseDTO response;
 
+        Optional<FilterStockRawResponseDTO> cacheResponseOpt = filterStockRawResponseRepository.findById(redisId);
 
-        return webClientBuilder
+        if (cacheResponseOpt != null && cacheResponseOpt.isPresent()) {
+            return cacheResponseOpt.get();
+        }
+
+        response = webClientBuilder
                 .build()
                 .post()
                 .uri(VnDirectConstants.STOCK_SEARCH_URL)
                 .bodyValue(req)
                 .retrieve()
                 .bodyToMono(FilterStockRawResponseDTO.class)
-                .doOnSuccess(response -> log.info("[Received response] size = {}", response.getData().size()))
+                .doOnSuccess(resp -> log.info("[Received response] size = {}", resp.getData().size()))
                 .onErrorResume((e) -> {
                     log.error("Error occurred while filtering stock", e);
                     return Mono.empty();
                 })
-                .toFuture();
+                .toFuture().join();
+        response.setRedisId(redisId);
+        filterStockRawResponseRepository.save(response);
+
+        return response;
+
     }
 
 

@@ -38,6 +38,10 @@ public class LogAspect {
     public void pointCutCrossService() {
     }
 
+    @Pointcut("within(trading.stock.stocktrading.repositories.UserRepository)")
+    public void pointCutCrossRepository() {
+    }
+
     @Before("pointCutCrossController() || pointCutCrossService() || pointCutCrossFacade()")
     public void startMethod(JoinPoint joinPoint) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -72,7 +76,7 @@ public class LogAspect {
         removeHeaderConfigOfThreadContext();
     }
 
-    @Around(value = "pointCutCrossController() || pointCutCrossService() || pointCutCrossFacade()")
+    @Around(value = "pointCutCrossController() || pointCutCrossService() || pointCutCrossFacade()||pointCutCrossRepository()")
     public Object measureExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
 
@@ -99,4 +103,5 @@ public class LogAspect {
     public void logBefore() {
         log.error("Executing log Before advice on getStockDetailByCodeAndTime()");
     }
+
 }

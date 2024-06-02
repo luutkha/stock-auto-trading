@@ -12,6 +12,7 @@ import trading.stock.stocktrading.controllers.StockController;
 import trading.stock.stocktrading.dtos.StockDetailDTO;
 import trading.stock.stocktrading.dtos.responses.StockDetailResponseDTO;
 import trading.stock.stocktrading.facades.StockFacade;
+import trading.stock.stocktrading.repositories.redis.FilterStockRawResponseRepository;
 import trading.stock.stocktrading.services.StockService;
 
 import java.io.IOException;
@@ -28,6 +29,9 @@ public class StockControllerTests {
     @MockBean
     private StockFacade stockFacade;
 
+    @MockBean
+    private FilterStockRawResponseRepository filterStockRawResponseRepository;
+
     @Test
     void testGetStockDetailByCodeAndTime() throws IOException {
         // Arrange
@@ -41,7 +45,7 @@ public class StockControllerTests {
         StockDetailDTO stockDetailDTO = StockDetailDTO.fromJson(jsonDetail);
         StockDetailResponseDTO expectedResponse = StockDetailResponseDTO.fromStockDetailDTO(stockDetailDTO);
 
-        StockController stockController = new StockController(stockFacade, stockServiceMock);
+        StockController stockController = new StockController(stockFacade, stockServiceMock, filterStockRawResponseRepository);
 
         // Act
 

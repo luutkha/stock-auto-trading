@@ -3,12 +3,14 @@ package trading.stock.stocktrading.dtos.requests;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class FilterStockRequestDTO {
     private String fields;
     private List<Filter> filters;

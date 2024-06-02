@@ -14,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import trading.stock.stocktrading.configs.advices.CommonExceptionHandler;
-import trading.stock.stocktrading.configs.filters.filter.ExceptionHandlerFilter;
 import trading.stock.stocktrading.configs.filters.filter.JwtFilter;
 import trading.stock.stocktrading.configs.handlers.CustomAccessDeniedHandler;
 
@@ -28,8 +27,8 @@ public class SecurityConfig {
     @Autowired
     private CommonExceptionHandler commonExceptionHandler;
 
-    @Autowired
-    private ExceptionHandlerFilter exceptionHandlerFilter;
+    //    @Autowired
+    //    private ExceptionHandlerFilter exceptionHandlerFilter;
     @Autowired
     private CustomAccessDeniedHandler customAccessDeniedHandler;
 
