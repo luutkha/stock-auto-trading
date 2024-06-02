@@ -71,7 +71,7 @@ public class LogAspect {
 
         logHeaderConfig(logger);
 
-        logger.info("Exception: {} {}", methodName, ex);
+        logger.error("Exception: {} {}", methodName, ex);
 
         removeHeaderConfigOfThreadContext();
     }
@@ -85,7 +85,7 @@ public class LogAspect {
         long endTime = System.currentTimeMillis();
         long executionTime = endTime - startTime;
 
-        log.info("{} executed in {} ms", joinPoint.getSignature().getName(), executionTime);
+        log.debug("{} executed in {} ms", joinPoint.getSignature().getName(), executionTime);
 
         return proceed;
     }
@@ -101,7 +101,7 @@ public class LogAspect {
 
     @Before("execution(* trading.stock.stocktrading.services.StockService.getStockDetailByCodeAndTime(String, Long, Long))")
     public void logBefore() {
-        log.error("Executing log Before advice on getStockDetailByCodeAndTime()");
+        log.debug("Executing log Before advice on getStockDetailByCodeAndTime()");
     }
 
 }

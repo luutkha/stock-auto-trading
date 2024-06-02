@@ -28,7 +28,7 @@ public class CacheAspect {
         // Extract and print the return type
         Class<?> returnType = signature.getDeclaringType().getMethod(signature.getName(),
                 ((MethodSignature) signature).getParameterTypes()).getReturnType();
-        System.out.println("Return type of method " + signature.getName() + ": " + returnType);
+        log.debug("Return type of method " + signature.getName() + ": " + returnType);
 
         try {
             // Check if Redis is reachable
@@ -36,18 +36,18 @@ public class CacheAspect {
             return joinPoint.proceed();
         } catch (Exception e) {
             if (List.class.isAssignableFrom(returnType)) {
-                System.out.println("Method " + signature.getName() + " returns a List");
+               log.debug("Method " + signature.getName() + " returns a List");
                 return new ArrayList<>();
             }
             if (returnType.equals(Boolean.class) || returnType.equals(boolean.class)) {
-                System.out.println("Method " + signature.getName() + " returns a Boolean");
+               log.debug("Method " + signature.getName() + " returns a Boolean");
                 return false;
             }
             if (returnType.equals(Optional.class)) {
-                System.out.println("Method " + signature.getName() + " returns a Optional");
+               log.debug("Method " + signature.getName() + " returns a Optional");
                 return Optional.empty();
             }
-            log.error("[REDIS SERVER DOWN] return null for all redis method");
+            log.debug("[REDIS SERVER DOWN] return null for all redis method");
             return null;
         }
 
