@@ -27,4 +27,28 @@ jobs:
           REMOTE_HOST: ${{ secrets.EC2_HOST }}
           REMOTE_USER: ${{ secrets.EC2_USERNAME }}
           TARGET: "/home/ec2-user/auto-trade"
-# TODO script to restart apache tomcat
+
+      - name: Move WAR to Tomcat and re-start Tomcat
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script: |
+          #!/bin/bash
+          # Define variables
+            WAR_FILE="/home/ec2-user/auto-trade/target/stock-trading.war"
+            TOMCAT_WEBAPP_DIR="/opt/tomcat/apache-tomcat-9.0.89/webapps"
+            TOMCAT_BIN_DIR="/opt/tomcat/apache-tomcat-9.0.89/bin"
+
+            # Stop Tomcat
+            sudo systemctl stop tomcat
+            
+            # Move the WAR file to Tomcat's webapps directory
+            sudo mv $WAR_FILE $TOMCAT_WEBAPP_DIR
+            
+            # Start Tomcat
+            sudo systemctl start tomcat
+                    
+            # Optional: Check Tomcat status
+            sudo systemctl status tomcat
