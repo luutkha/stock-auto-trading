@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/stock")
+@RequestMapping("/stocks")
 @Log4j2
 public class StockController {
 

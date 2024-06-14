@@ -70,6 +70,7 @@ public class StockServiceImpl implements StockService {
                 })
                 .toFuture().join();
         response.setRedisId(redisId);
+        response.setExpiration(10L);
         filterStockRawResponseRepository.save(response);
 
         return response;

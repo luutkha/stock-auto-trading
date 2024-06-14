@@ -24,7 +24,8 @@ public class FilterStockRawResponseDTO implements Serializable {
     @Id
     @JsonIgnore
     private String redisId;
-    @TimeToLive(unit = TimeUnit.MINUTES)
+
+    @TimeToLive(unit = TimeUnit.SECONDS)
     @Value("${stock.trade.cache.expire}")
     private Long expiration;
 }

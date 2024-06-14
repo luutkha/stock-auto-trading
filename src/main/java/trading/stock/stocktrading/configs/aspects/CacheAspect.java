@@ -6,6 +6,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -35,6 +36,7 @@ public class CacheAspect {
             redisTemplate.opsForValue().get("ping");
             return joinPoint.proceed();
         } catch (Exception e) {
+            notifyToDeveloperCallBack();
             if (List.class.isAssignableFrom(returnType)) {
                log.debug("Method " + signature.getName() + " returns a List");
                 return new ArrayList<>();
@@ -52,4 +54,9 @@ public class CacheAspect {
         }
 
     }
+
+    void notifyToDeveloperCallBack(){
+
+    }
+
 }

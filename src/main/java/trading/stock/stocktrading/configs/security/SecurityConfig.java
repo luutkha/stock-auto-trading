@@ -44,6 +44,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/auth/**")
                         .permitAll()
+                        .requestMatchers("/check/**")
+                        .permitAll()
                         .requestMatchers("/stock/**")
                         .hasRole("USER")
                         .anyRequest()

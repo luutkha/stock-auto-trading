@@ -29,7 +29,7 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
 
-    @GetMapping("/")
+    @GetMapping()
     public ResponseEntity<String> hello() {
         return ResponseEntity.ok("Hello!");
     }

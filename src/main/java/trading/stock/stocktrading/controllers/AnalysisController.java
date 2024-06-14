@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/analysis")
+@RequestMapping("/stocks/analysis")
 @Log4j2
 public class AnalysisController {
     private final StockFacade stockFacade;
