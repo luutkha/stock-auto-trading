@@ -61,6 +61,14 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(bodyOfResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(value = {RuntimeException.class})
+    protected ResponseEntity<Object> handleDuplicateEmailException(RuntimeException ex, WebRequest request) {
+        log.info("[ADVICE] RuntimeException {}", ex.getMessage());
+        log.error("[Session] {} ", request.getSessionId());
+        String bodyOfResponse = ex.getMessage();
+        return new ResponseEntity<>(bodyOfResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 //    @ExceptionHandler(value = {Exception.class})
 //    protected ResponseEntity<Object> handleException(Exception ex) {
 //        log.info("[ADVICE] Exception");
