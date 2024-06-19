@@ -7,6 +7,9 @@ services:
       - mongodb
     networks:
       - app-network
+    environment:
+      MONGO_HOST: mongodb
+      MONGO_PORT: 27017
 
   mongodb:
     image: mongo:latest
@@ -16,14 +19,11 @@ services:
     environment:
       MONGO_INITDB_DATABASE: stock-trading
     ports:
-      - "27017:27017"
+      - "27017"
     networks:
       - app-network
-
-volumes:
-  mongo-data:
-    driver: local
-
 networks:
   app-network:
     driver: bridge
+volumes:
+  mongo-data:
