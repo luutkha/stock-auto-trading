@@ -1,13 +1,24 @@
-FROM ubuntu:latest
-LABEL authors="lkha"
+# First stage: Build the WAR file
+FROM maven:3.8.4-openjdk-17-slim AS builder
 
-ENTRYPOINT ["top", "-b"]
+# Set the working directory
+WORKDIR /app
 
-# Use an official Tomcat runtime as a parent image
+# Copy the pom.xml and source code
+COPY pom.xml .
+COPY src ./src
+
+# Package the application to create the WAR file
+RUN mvn clean install -DskipTests
+
+# Second stage: Set up Tomcat and deploy the WAR file
 FROM tomcat:11.0.0-jdk21-openjdk
 
-# Copy the WAR file to the webapps directory in Tomcat
-COPY target/stock-trading.war /usr/local/tomcat/webapps/
+# Copy the WAR file from the builder stage to the Tomcat webapps directory
+COPY --from=builder /app/target/stock-trading.war /usr/local/tomcat/webapps/
 
 # Expose port 8080
 EXPOSE 8080
+
+# Define entrypoint
+ENTRYPOINT ["catalina.sh", "run"]
