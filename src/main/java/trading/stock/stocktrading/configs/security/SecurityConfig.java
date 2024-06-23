@@ -1,6 +1,6 @@
 package trading.stock.stocktrading.configs.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,23 +14,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import trading.stock.stocktrading.configs.advices.CommonExceptionHandler;
-import trading.stock.stocktrading.configs.filters.filter.JwtFilter;
+import trading.stock.stocktrading.configs.filters.ExceptionHandlerFilter;
+import trading.stock.stocktrading.configs.filters.JwtFilter;
 import trading.stock.stocktrading.configs.handlers.CustomAccessDeniedHandler;
 
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfig {
 
-    @Autowired
-    private JwtFilter jwtFilter;
-
-    @Autowired
-    private CommonExceptionHandler commonExceptionHandler;
-
-    //    @Autowired
-    //    private ExceptionHandlerFilter exceptionHandlerFilter;
-    @Autowired
-    private CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final JwtFilter jwtFilter;
+    private final CommonExceptionHandler commonExceptionHandler;
+    private final ExceptionHandlerFilter exceptionHandlerFilter;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -59,7 +55,7 @@ public class SecurityConfig {
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .addFilterBefore(exceptionHandlerFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(exceptionHandlerFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

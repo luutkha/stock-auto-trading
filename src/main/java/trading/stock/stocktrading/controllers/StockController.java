@@ -52,8 +52,7 @@ public class StockController {
     public FilterStockRawResponseDTO filterStock() {
         FilterStockRequestDTO.Filter filter = new FilterStockRequestDTO.Filter("floor", "EQUAL", "HNX,HOSE");
         FilterStockRequestDTO requestDTO = new FilterStockRequestDTO("code,companyNameVi,floor,priceCr,quarterReportDate,annualReportDate,industrylv2,marketCapCr", List.of(filter), "code:asc");
-        FilterStockRawResponseDTO response = stockService.filterStock(requestDTO);
-        return response;
+        return stockService.filterStock(requestDTO);
     }
 }
 

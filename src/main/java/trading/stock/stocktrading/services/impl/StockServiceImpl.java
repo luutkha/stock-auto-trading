@@ -52,7 +52,7 @@ public class StockServiceImpl implements StockService {
 
         Optional<FilterStockRawResponseDTO> cacheResponseOpt = filterStockRawResponseRepository.findById(redisId);
 
-        if (cacheResponseOpt != null && cacheResponseOpt.isPresent()) {
+        if (cacheResponseOpt.isPresent()) {
             return cacheResponseOpt.get();
         }
 

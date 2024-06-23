@@ -1,7 +1,6 @@
-package trading.stock.stocktrading.configs.filters.filter;
+package trading.stock.stocktrading.configs.filters;
 
 
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +27,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private final UserDetailsServiceImpl service;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, JwtException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         log.error("[CALL] {}", request.getRequestURI());
         String authorizationHeader = request.getHeader("Authorization");
 
@@ -57,7 +56,12 @@ public class JwtFilter extends OncePerRequestFilter {
                 log.info("It not gud !! Try again!");
             }
         }
-        filterChain.doFilter(request, response);
+        try {
+            filterChain.doFilter(request, response);
+        } catch (IOException | ServletException e) {
+            log.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
 //        log.error("END", this.getClass().toString());
     }
 }

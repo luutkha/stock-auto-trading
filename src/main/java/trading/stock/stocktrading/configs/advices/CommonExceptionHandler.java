@@ -23,11 +23,9 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
         String errorMessage = "[JWT] Unknown Exception";
         if (ex instanceof SignatureException) {
             errorMessage = "Signature Exception";
-        }
-        if (ex instanceof ExpiredJwtException) {
+        } else if (ex instanceof ExpiredJwtException) {
             errorMessage = "Expired JWT Exception";
-        }
-        if (ex instanceof JwtException) {
+        } else if (ex instanceof JwtException) {
             errorMessage = "JWT Exception";
         }
         return errorMessage;

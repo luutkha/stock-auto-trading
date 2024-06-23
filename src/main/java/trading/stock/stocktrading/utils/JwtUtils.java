@@ -31,13 +31,10 @@ public class JwtUtils {
     }
 
     private Claims extractAllClaims(String token) throws JwtException {
-        try {
 
-            return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
 
-        } catch (Exception e) {
-            throw new JwtException(e.getMessage());
-        }
+
     }
 
     private Boolean isTokenExpired(String token) {

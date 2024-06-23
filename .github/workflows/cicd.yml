@@ -46,6 +46,6 @@ jobs:
             
             # Start Tomcat
             sudo systemctl start tomcat
-                    
+            
             # Optional: Check Tomcat status
             sudo systemctl status tomcat

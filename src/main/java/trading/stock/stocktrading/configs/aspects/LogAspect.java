@@ -42,7 +42,11 @@ public class LogAspect {
     public void pointCutCrossRepository() {
     }
 
-    @Before("pointCutCrossController() || pointCutCrossService() || pointCutCrossFacade()")
+    @Pointcut("within(trading.stock.stocktrading.utils.*)")
+    public void pointCutCrossUtils() {
+    }
+
+    @Before("pointCutCrossController() || pointCutCrossService() || pointCutCrossFacade() || pointCutCrossUtils()")
     public void startMethod(JoinPoint joinPoint) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Logger logger = LogManager.getLogger(signature.getDeclaringTypeName());
@@ -52,7 +56,7 @@ public class LogAspect {
         removeHeaderConfigOfThreadContext();
     }
 
-    @After("pointCutCrossController() || pointCutCrossService() || pointCutCrossFacade()")
+    @After("pointCutCrossController() || pointCutCrossService() || pointCutCrossFacade() || pointCutCrossUtils()")
     public void endMethod(JoinPoint joinPoint) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         String methodName = signature.getMethod().getName();
@@ -63,7 +67,7 @@ public class LogAspect {
         removeHeaderConfigOfThreadContext();
     }
 
-    @AfterThrowing(value = "pointCutCrossController() || pointCutCrossService() || pointCutCrossFacade()", throwing = "ex")
+    @AfterThrowing(value = "pointCutCrossController() || pointCutCrossService() || pointCutCrossFacade() || pointCutCrossUtils()", throwing = "ex")
     public void throwException(JoinPoint joinPoint, Throwable ex) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Logger logger = LogManager.getLogger(signature.getDeclaringTypeName());

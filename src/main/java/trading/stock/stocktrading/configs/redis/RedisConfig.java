@@ -13,6 +13,7 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.port}")
     private Integer redisPort;
+
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
         JedisConnectionFactory jedisConFactory

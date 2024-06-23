@@ -58,16 +58,30 @@ public class StockDetailResponseDTO {
         return true;
     }
 
+
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        StockDetailResponseDTO that = (StockDetailResponseDTO) o;
+//        return Objects.equals(status, that.status) && Objects.equals(infoByTimes, that.infoByTimes) && Objects.equals(prices, that.prices);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(status, infoByTimes, prices);
+//    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        StockDetailResponseDTO secondObject = (StockDetailResponseDTO) o;
-        return status.equals(secondObject.status) && compareInfoByTimes(infoByTimes, secondObject.infoByTimes);
+        StockDetailResponseDTO that = (StockDetailResponseDTO) o;
+        return Objects.equals(status, that.status) && Objects.equals(infoByTimes, that.infoByTimes) && Objects.equals(prices, that.prices);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(status, infoByTimes);
+        return Objects.hash(status, infoByTimes, prices);
     }
 }

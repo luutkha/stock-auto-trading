@@ -6,7 +6,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -38,15 +37,15 @@ public class CacheAspect {
         } catch (Exception e) {
             notifyToDeveloperCallBack();
             if (List.class.isAssignableFrom(returnType)) {
-               log.debug("Method " + signature.getName() + " returns a List");
+                log.debug("Method " + signature.getName() + " returns a List");
                 return new ArrayList<>();
             }
             if (returnType.equals(Boolean.class) || returnType.equals(boolean.class)) {
-               log.debug("Method " + signature.getName() + " returns a Boolean");
+                log.debug("Method " + signature.getName() + " returns a Boolean");
                 return false;
             }
             if (returnType.equals(Optional.class)) {
-               log.debug("Method " + signature.getName() + " returns a Optional");
+                log.debug("Method " + signature.getName() + " returns a Optional");
                 return Optional.empty();
             }
             log.debug("[REDIS SERVER DOWN] return null for all redis method");
@@ -55,7 +54,7 @@ public class CacheAspect {
 
     }
 
-    void notifyToDeveloperCallBack(){
+    void notifyToDeveloperCallBack() {
 
     }
 
