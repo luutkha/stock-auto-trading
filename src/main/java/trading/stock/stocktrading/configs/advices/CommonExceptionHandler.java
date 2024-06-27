@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import trading.stock.stocktrading.dtos.responses.ValidateTokenResponseDTO;
+import trading.stock.stocktrading.exceptions.InvalidInputException;
 
 import java.io.IOException;
 
@@ -65,6 +66,13 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("[Session] {} ", request.getSessionId());
         String bodyOfResponse = ex.getMessage();
         return new ResponseEntity<>(bodyOfResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(value = {InvalidInputException.class})
+    protected ResponseEntity<Object> handleDuplicateEmailException(InvalidInputException ex, WebRequest request) {
+        log.info("[ADVICE] RuntimeException {}", ex.getMessage());
+        log.error("[Session] {} ", request.getSessionId());
+        return new ResponseEntity<>(ex.getErrors(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 //    @ExceptionHandler(value = {Exception.class})
