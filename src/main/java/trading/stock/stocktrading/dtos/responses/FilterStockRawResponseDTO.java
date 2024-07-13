@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@RedisHash("FilterStockRawResponseDTO")
+@RedisHash
 public class FilterStockRawResponseDTO implements Serializable {
     private List<CompanyReportDTO> data;
     private int size;
@@ -25,7 +25,6 @@ public class FilterStockRawResponseDTO implements Serializable {
     @JsonIgnore
     private String redisId;
 
-    @TimeToLive(unit = TimeUnit.SECONDS)
-    @Value("${stock.trade.cache.expire}")
+    @TimeToLive
     private Long expiration;
 }
