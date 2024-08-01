@@ -2,6 +2,7 @@ package trading.stock.stocktrading.services.impl;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import trading.stock.stocktrading.constants.VnDirectConstants;
@@ -30,8 +31,8 @@ public class StockServiceImpl implements StockService {
 
         long currentTime = System.currentTimeMillis() / 1000L;
 
-        int MILI_OF_2_DAYS = 60 * 60 * 24 * 2;
-        String url = String.format(VnDirectConstants.STOCK_DETAIL_URL, stockCode, currentTime - MILI_OF_2_DAYS, currentTime + 100);
+        int miliOf2Days = 60 * 60 * 24 * 2;
+        String url = String.format(VnDirectConstants.STOCK_DETAIL_URL, stockCode, currentTime - miliOf2Days, currentTime + 100);
         log.info("[URI] = " + url);
 
         return webClientBuilder.build().get().uri(url).retrieve().bodyToMono(String.class);
@@ -64,7 +65,7 @@ public class StockServiceImpl implements StockService {
                 .retrieve()
                 .bodyToMono(FilterStockRawResponseDTO.class)
                 .doOnSuccess(resp -> log.info("[Received response] size = {}", resp.getData().size()))
-                .onErrorResume((e) -> {
+                .onErrorResume(e -> {
                     log.error("Error occurred while filtering stock", e);
                     return Mono.empty();
                 })

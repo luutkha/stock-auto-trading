@@ -7,10 +7,7 @@ import trading.stock.stocktrading.dtos.DefaultMovingAverageDTO;
 import trading.stock.stocktrading.exceptions.InvalidInputException;
 import trading.stock.stocktrading.utils.Number;
 
-import java.util.Arrays;
-import java.util.DoubleSummaryStatistics;
-import java.util.List;
-import java.util.LongSummaryStatistics;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
@@ -29,7 +26,7 @@ public class Stock {
 
     public static double calculateMovingAverage(List<Double> prices, int size) {
         if (prices.size() < size) {
-            throw new InvalidInputException("[size] is invalid");
+            throw new InvalidInputException("[size] is invalid", new ArrayList<>());
         }
         List<Double> movingAverage = prices.subList(prices.size() - size, prices.size() - 1);
         return Arrays.stream(Number.convertListToArray(movingAverage)).summaryStatistics().getAverage();
