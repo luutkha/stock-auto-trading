@@ -17,7 +17,7 @@ class StockTradingApplicationTests {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void testApplicationStatus() {
+    void testApplicationStatus() {
         String response = restTemplate.getForObject("http://localhost:" + port + "/", String.class);
         Assertions.assertEquals("ok", response);
     }

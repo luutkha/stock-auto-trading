@@ -100,7 +100,7 @@ public class LogAspect {
         ThreadContext.put("session", request.getSession().getId());
 //        logger.info("ipAddress  {}", ThreadContext.get("ipAddress"));
 //        logger.info("userId  {}", ThreadContext.get("userId"));
-        logger.info("session  {}", ThreadContext.get("session"));
+        logger.info("session  {}", () -> ThreadContext.get("session"));
     }
 
     @Before("execution(* trading.stock.stocktrading.services.StockService.getStockDetailByCodeAndTime(String, Long, Long))")

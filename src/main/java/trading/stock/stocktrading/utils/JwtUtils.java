@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,8 @@ import java.util.function.Function;
 @Service
 public class JwtUtils {
 
-    private final String secret = "auto-trade-stock-secret-key-jwt";
+    @Value("${jwt.secret}")
+    private static final String secret = "jwt-secret";
 
     public String extractUsername(String token) throws JwtException {
         return extractClaim(token, Claims::getSubject);

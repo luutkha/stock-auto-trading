@@ -10,7 +10,7 @@ import trading.stock.stocktrading.services.StockService;
 
 @SpringBootTest
 @Log4j2
-public class StockServiceTest {
+class StockServiceTest {
 
     @Autowired
     StockService stockService;
@@ -20,7 +20,7 @@ public class StockServiceTest {
         String hpg = stockService.getStockDetailByCodeInCurrentTime("HPG").block();
         assert hpg != null;
         log.info("[RESPONSE] = " + hpg);
-        Assertions.assertNotEquals(hpg.length(), 0);
+        Assertions.assertNotEquals(0, hpg.length());
         Assertions.assertFalse(hpg.isEmpty());
     }
 }

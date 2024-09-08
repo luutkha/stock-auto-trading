@@ -8,4 +8,7 @@ public class Number {
                 .mapToDouble(Double::doubleValue)
                 .toArray();
     }
+
+    private Number() {
+    }
 }

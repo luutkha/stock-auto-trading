@@ -22,7 +22,6 @@ import trading.stock.stocktrading.services.UserService;
 import trading.stock.stocktrading.utils.JwtUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
@@ -59,7 +58,7 @@ public class UserController {
             throw new InvalidInputException("Input errors",bindingResult.getFieldErrors());
         }
         List<String> roles = body.getRoles();
-        roles = roles.stream().map(role -> SecurityConstants.ROLE_PREFIX + role).collect(Collectors.toList());
+        roles = roles.stream().map(role -> SecurityConstants.ROLE_PREFIX + role).toList();
 
         return userService.save(new User(null, body.getEmail(), body.getUserName(), passwordEncoder.encode(body.getPassword()), roles));
     }

@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @Log4j2
-public class StockControllerTests {
+class StockControllerTests {
 
     @MockBean
     private StockService stockServiceMock;

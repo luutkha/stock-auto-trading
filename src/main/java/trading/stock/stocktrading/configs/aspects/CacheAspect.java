@@ -55,7 +55,7 @@ public class CacheAspect {
     }
 
     void notifyToDeveloperCallBack() {
-
+        log.debug("[REDIS SERVER DOWN] return null for all redis method");
     }
 
 }

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Log4j2
 public class StockDetailDTO {
     /**
      * time in timestamp
@@ -48,7 +50,7 @@ public class StockDetailDTO {
         try {
             return objectMapper.readValue(json, StockDetailDTO.class);
         } catch (JsonProcessingException e) {
-            System.out.println("Exception catch!");
+            log.error("Exception catch!");
             throw new RuntimeException(e);
         }
     }

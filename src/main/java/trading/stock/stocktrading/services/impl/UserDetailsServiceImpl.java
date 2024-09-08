@@ -13,7 +13,6 @@ import trading.stock.stocktrading.services.UserService;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -41,7 +40,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user.getRoles() == null) return new ArrayList<>();
         return user.getRoles().stream()
                 .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }

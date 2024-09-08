@@ -8,7 +8,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -28,7 +27,7 @@ public class ApiService {
                         .bodyToMono(responseType)
                         .toFuture())
                 .map(future -> CompletableFuture.supplyAsync(future::join, executorService))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public <T> List<CompletableFuture<T>> getDataFromURLsPostMethod(List<String> urls, Class<T> responseType, Object body) {
@@ -42,7 +41,7 @@ public class ApiService {
                         .bodyToMono(responseType)
                         .toFuture())
                 .map(future -> CompletableFuture.supplyAsync(future::join, executorService))
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }

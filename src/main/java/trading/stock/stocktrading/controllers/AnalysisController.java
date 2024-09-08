@@ -12,12 +12,10 @@ import trading.stock.stocktrading.entities.DarvasBox;
 import trading.stock.stocktrading.facades.StockFacade;
 import trading.stock.stocktrading.services.ApiService;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/stocks/analysis")
@@ -41,21 +39,22 @@ public class AnalysisController {
     }
 
     @GetMapping("/darvas")
-    public ResponseEntity<List<DarvasBox>> detectDarvasBoxOfStock(@RequestParam String symbol, @RequestParam Long from, @RequestParam Long to) throws IOException {
+    public ResponseEntity<List<DarvasBox>> detectDarvasBoxOfStock(@RequestParam String symbol, @RequestParam Long from, @RequestParam Long to) {
         StockDetailResponseDTO response = stockFacade.getStockDetailByTime(symbol, from, to);
         List<DarvasBox> body = DarvasBox.analysisDarvasBoxByPrices(response.getPrices());
         return ResponseEntity.ok(body);
     }
 
     @GetMapping
-    public AnalysisStockDetailDTO analysisStock(@RequestParam String symbol, @RequestParam Long from, @RequestParam Long to, @RequestParam(required = false) Boolean darvas, @RequestParam(required = false) Boolean volume) throws IOException {
+    public AnalysisStockDetailDTO analysisStock(@RequestParam String symbol, @RequestParam Long from, @RequestParam Long to, @RequestParam(required = false) Boolean darvas, @RequestParam(required = false) Boolean volume) {
         StockDetailResponseDTO stockDetailByTime = stockFacade.getStockDetailByTime(symbol, from, to);
         return stockFacade.analysisStock(stockDetailByTime);
     }
 
     @PostMapping()
     public List<AnalysisStockDetailDTO> analysisStocks(@RequestBody AnalysisStockRequestBodyDTO body) {
-        List<String> listStock = body.getSymbols().stream().map(code -> String.format(VnDirectConstants.STOCK_DETAIL_URL, code, body.getFrom(), body.getTo())).collect(Collectors.toList());
+        List<String> listStock = body.getSymbols().stream().map(code -> String.format(VnDirectConstants.STOCK_DETAIL_URL, code, body.getFrom(), body.getTo())).toList();
+
         List<CompletableFuture<String>> futures = apiService.getDataFromURLs(listStock, String.class);
         List<AnalysisStockDetailDTO> results = new ArrayList<>();
         futures.forEach(stringCompletableFuture -> {

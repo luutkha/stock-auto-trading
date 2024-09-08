@@ -12,7 +12,6 @@ import trading.stock.stocktrading.facades.StockFacade;
 import trading.stock.stocktrading.repositories.redis.FilterStockRawResponseRepository;
 import trading.stock.stocktrading.services.StockService;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -31,7 +30,7 @@ public class StockController {
     }
 
     @GetMapping()
-    public ResponseEntity<StockDetailResponseDTO> getStockDetailByCodeAndTime(@RequestParam String symbol, @RequestParam(required = false) Long from, @RequestParam(required = false) Long to) throws IOException {
+    public ResponseEntity<StockDetailResponseDTO> getStockDetailByCodeAndTime(@RequestParam String symbol, @RequestParam(required = false) Long from, @RequestParam(required = false) Long to) {
 
         StockDetailResponseDTO response = stockFacade.getStockDetailByTime(symbol, from, to);
         return ResponseEntity.ok(response);
@@ -41,7 +40,7 @@ public class StockController {
 
     // TODO: Spring security block async controller, for now, we enable async controller for any request
     @GetMapping("/async")
-    public Mono<ResponseEntity<StockDetailResponseDTO>> getStockDetailByCodeAndTimeAsync(@RequestParam String symbol, @RequestParam(required = false) Long from, @RequestParam(required = false) Long to) throws Exception {
+    public Mono<ResponseEntity<StockDetailResponseDTO>> getStockDetailByCodeAndTimeAsync(@RequestParam String symbol, @RequestParam(required = false) Long from, @RequestParam(required = false) Long to) {
         return stockFacade.getStockDetailByTimeAsync(symbol, from, to).map(ResponseEntity::ok).onErrorResume(e -> {
             log.error("Error fetching stock details", e);
             return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());

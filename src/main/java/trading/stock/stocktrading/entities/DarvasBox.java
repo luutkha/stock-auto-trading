@@ -57,7 +57,7 @@ public class DarvasBox {
                     Double price = prices.get(i);
                     GAP_OF_PRICE = price / 100 * 2;
                     count++;
-                    if (!(price <= highReferencePrice) || !(price >= lowReferencePrice)) {
+                    if (!(highReferencePrice > price) || !(lowReferencePrice < price)) {
                         if (price > (highReferencePrice + GAP_OF_PRICE)) {
                             if ((count > 10 || i == prices.size() - 1)) {
                                 log.info("/ price / lowRef / highRef / =  {} / {} / {}", price, lowReferencePrice, highReferencePrice);
@@ -67,6 +67,8 @@ public class DarvasBox {
                                 highReferencePrice = price;
 
                                 count = 0;
+                            } else {
+                                // Do nothing
                             }
                         }
 
